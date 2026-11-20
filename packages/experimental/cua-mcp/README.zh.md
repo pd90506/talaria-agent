@@ -28,7 +28,7 @@ kind: "package-bundle"
 
 ### 启动服务器
 
-组合包是 `dsh` 安装的运行时依赖，因此只选它这一层的 profile 直接从安装中加载它；不涉及 pnpm、registry 或网络。在 Harness home（`$DSH_HOME`，默认 `~/.dsh`）下创建一次 profile，之后 `dsh --profile cua-mcp` 就是 stdio 命令，源码检出在 `pnpm run build` 之后通过 `pnpm dsh` 运行它。不要把组合包加进已经组合了 `dsh-base` 的 profile（例如 `dsh plugin --profile cua-mcp add` 创建的那种）：两套组合声明同样的行 id，Web 插件页也因此隐藏本组合包，而 Host 清单仍把它报告为可选组合包。
+组合包是 `dsh` 安装的运行时依赖，因此只选它这一层的 profile 直接从安装中加载它；不涉及 pnpm、registry 或网络。在 Harness home（`$DSH_HOME`，默认 `~/.talaria-agent`）下创建一次 profile，之后 `dsh --profile cua-mcp` 就是 stdio 命令，源码检出在 `pnpm run build` 之后通过 `pnpm dsh` 运行它。不要把组合包加进已经组合了 `dsh-base` 的 profile（例如 `dsh plugin --profile cua-mcp add` 创建的那种）：两套组合声明同样的行 id，Web 插件页也因此隐藏本组合包，而 Host 清单仍把它报告为可选组合包。
 
 ```sh
 mkdir -p "${DSH_HOME:-$HOME/.dsh}/profiles/cua-mcp"

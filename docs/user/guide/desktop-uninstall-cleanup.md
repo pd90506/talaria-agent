@@ -17,7 +17,7 @@ Quit DeepSeek Harness, then uninstall it using your platform's procedure:
 
 This step is optional. If you want to clean up local data, select the script for your platform below, then paste and run it in Terminal on macOS or PowerShell on Windows.
 
-The scripts permanently delete the current user's default Harness home and the Desktop data paths listed below, including sessions, credentials, settings, plugins, caches, and shared CLI state. If you configured `DSH_HOME`, inspect that directory separately before deleting it; the scripts still delete the default `~/.dsh`. Isolated development and test data directories are outside this cleanup scope.
+The scripts permanently delete the current user's default Harness home and the Desktop data paths listed below, including sessions, credentials, settings, plugins, caches, and shared CLI state. If you configured `DSH_HOME`, inspect that directory separately before deleting it; the scripts still delete the default `~/.talaria-agent`. Isolated development and test data directories are outside this cleanup scope.
 
 On Windows, the uninstaller normally removes the two application-data directories listed in the script but retains the Harness home. The script also handles those directories if uninstallation left files behind or retained app data.
 

@@ -45,7 +45,7 @@ Update confirmations use the shell static origin because they must remain availa
 ## Filesystem layout
 
 ```text
-~/.dsh/
+~/.talaria-agent/
   profiles/
     desktop/
       package.json

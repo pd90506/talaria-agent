@@ -45,7 +45,7 @@ Desktop Host 为保留 profile 提供共享 Web 插件管理器，并通过启�
 ## 文件系统布局
 
 ```text
-~/.dsh/
+~/.talaria-agent/
   profiles/
     desktop/
       package.json
