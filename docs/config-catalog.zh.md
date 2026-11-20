@@ -1915,6 +1915,23 @@ export interface Config {
 ```
 <!-- END GENERATED config-catalog:@deepseek-ai/dsh-host-authentication-desktop -->
 
+<!-- BEGIN GENERATED config-catalog:@deepseek-ai/dsh-host-authentication-tailscale -->
+<a id="deepseek-aidsh-host-authentication-tailscale"></a>
+
+## `@deepseek-ai/dsh-host-authentication-tailscale`
+
+- `inject`: `connection` · `connection.authentication`
+- `source`: [`packages/host/authentication-tailscale/src/index.ts:15`](../packages/host/authentication-tailscale/src/index.ts)
+
+```ts config-catalog
+/** Tailnet users admitted as the owner. */
+export interface Config {
+  /** Tailscale login names, such as `alice@github`, admitted with owner access; at least one. */
+  allowedLogins: string[]
+}
+```
+<!-- END GENERATED config-catalog:@deepseek-ai/dsh-host-authentication-tailscale -->
+
 <!-- BEGIN GENERATED config-catalog:@deepseek-ai/dsh-host-authentication-token -->
 <a id="deepseek-aidsh-host-authentication-token"></a>
 
@@ -3348,6 +3365,26 @@ export interface JsonRpcConfig {
 }
 ```
 <!-- END GENERATED config-catalog:@deepseek-ai/dsh-sdk-jsonrpc-server -->
+
+<!-- BEGIN GENERATED config-catalog:@deepseek-ai/dsh-server-app -->
+<a id="deepseek-aidsh-server-app"></a>
+
+## `@deepseek-ai/dsh-server-app`
+
+- `source`: [`packages/bundle/server-app/src/index.ts:22`](../packages/bundle/server-app/src/index.ts)
+
+```ts config-catalog
+/** How this plugin reaches the local Tailscale node. */
+export interface Config {
+  /** Tailscale CLI executable name or path. */
+  command: string
+  /** Deadline for each CLI query, in milliseconds. */
+  timeoutMs: number
+  /** Loopback listener port that `tailscale serve` should proxy to. */
+  listenPort: number
+}
+```
+<!-- END GENERATED config-catalog:@deepseek-ai/dsh-server-app -->
 
 <!-- BEGIN GENERATED config-catalog:@deepseek-ai/dsh-session-log-deepseek -->
 <a id="deepseek-aidsh-session-log-deepseek"></a>

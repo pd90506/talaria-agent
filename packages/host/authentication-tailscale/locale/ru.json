@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Аутентификация Tailscale",
+    "description": "Входит пользователей Tailnet, распознанных Tailscale Serve, без токена запуска."
+  }
+}

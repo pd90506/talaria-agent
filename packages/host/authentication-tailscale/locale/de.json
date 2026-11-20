@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Tailscale-Authentifizierung",
+    "description": "Von Tailscale Serve erkannte Tailnet-Benutzer ohne Starttoken anmelden."
+  }
+}

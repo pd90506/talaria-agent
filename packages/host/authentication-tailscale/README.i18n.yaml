@@ -1,0 +1,37 @@
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write packages/host/authentication-tailscale/README.md
+/:
+  en: a00addbf8eb61bab
+  zh: e7fe119eba9b2493
+/deepseek-ai-dsh-host-authentication-tailscale:
+  en: e5bab71c1c2672c7
+  zh: 27d6c42daefa92b5
+/deepseek-ai-dsh-host-authentication-tailscale/summary:
+  en: f1ff71872b0983bb
+  zh: 3c7628a4be27dbe1
+/deepseek-ai-dsh-host-authentication-tailscale/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: f84d50f3f752145c
+/deepseek-ai-dsh-host-authentication-tailscale/use-this-package:
+  en: 7e07d32bcb31955f
+  zh: eaf9ab3ab87ad143
+/deepseek-ai-dsh-host-authentication-tailscale/understand-the-implementation:
+  en: 3bd88d300a2f6afe
+  zh: 2645485e12a788a6
+/deepseek-ai-dsh-host-authentication-tailscale/further-exploration:
+  en: 265fe2cbf97948c7
+  zh: 4c878cae42e22463
+/deepseek-ai-dsh-host-authentication-tailscale/model-experience:
+  en: afca588fd56333d6
+  zh: 3b7c196ac96f56d9
+/deepseek-ai-dsh-host-authentication-tailscale/model-experience/kv-cache-effect:
+  en: bc510c5c25c0204f
+  zh: 55366b46ba23f1eb
+/deepseek-ai-dsh-host-authentication-tailscale/known-limitations-and-deferred-work:
+  en: 726966760caf13ee
+  zh: 7bc338bc7935d29b
+/deepseek-ai-dsh-host-authentication-tailscale/known-limitations-and-deferred-work/dev-note:
+  en: e67f633dc6fe7773
+  zh: e88aeb617ffb74ea

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Server profile",
+    "description": "Run an always-on Host with the Web UI that Tailnet devices reach through Tailscale Serve."
+  }
+}

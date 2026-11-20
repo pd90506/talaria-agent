@@ -1,0 +1,44 @@
+# The dsh-server-app bundle patch: an always-on Host over dsh-base and
+# dsh-web-app, reachable from the Tailnet through `tailscale serve`.
+# Applied after dsh-web-app; rows here override Web rows by id. A patch
+# replaces a row's whole `config`, so each row restates every key it owns.
+#
+# The listener stays on loopback; `tailscale serve` terminates HTTPS and adds
+# the Tailscale-User-Login header that the authentication row trusts.
+
+- insert:
+    # Reads the local Tailscale node once at load; a missing CLI, a stopped
+    # node, or a machine without MagicDNS fails startup.
+    - id: server-tailscale-node
+      name: '@deepseek-ai/dsh-server-app'
+      inject: [webStartup]
+      config:
+        listenPort: !!js ctx.webStartup.port ?? 3080
+
+    # Admits the Tailnet user who owns this machine as the owner. A tagged
+    # machine has no owner login: override `allowedLogins` in the profile's
+    # cordis.patch.yml. The launch-token row stays mounted for local access.
+    - id: authentication-tailscale
+      name: '@deepseek-ai/dsh-host-authentication-tailscale'
+      inject: [tailscaleNode]
+      config:
+        allowedLogins: !!js ctx.tailscaleNode.ownerLogins
+
+# The Tailnet authority is trusted on any port beside each --trusted-host value.
+- id: connection
+  inject: [webStartup, tailscaleNode]
+  config:
+    trustedHosts: !!js "[...ctx.webStartup.trustedHosts, ctx.tailscaleNode.dnsName]"
+
+# Advertise the `tailscale serve` root unless --public-url names another, and
+# never open a browser on the server machine.
+- id: web-runtime
+  inject: [webStartup, tailscaleNode]
+  config:
+    publicUrl: !!js "ctx.webStartup.publicUrl ?? ctx.tailscaleNode.serveUrl ?? `https://${ctx.tailscaleNode.dnsName}/`"
+    surfaceContext: true
+    openBrowser: false
+    printUrl: true
+
+- id: hmr
+  disabled: true
