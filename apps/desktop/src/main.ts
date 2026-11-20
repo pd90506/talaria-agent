@@ -27,6 +27,8 @@ import {
   type MenuItemConstructorOptions,
 } from 'electron'
 import { resolveDesktopPaths } from './paths.ts'
+import { readDesktopConnection } from './remote-connection.ts'
+import { runRemoteDesktop, showConnectionWindow } from './remote-window.ts'
 import { DesktopProjectManager } from './project-manager.ts'
 import { DesktopHostFatalError, DesktopHostProcess, DesktopHostUncleanExitError } from './host-process.ts'
 import { DesktopPlatformView, PLATFORM_IPC, platformBounds } from './platform-view.ts'
@@ -379,6 +381,18 @@ function createWindow(preload: string, show = false, primary = false): BrowserWi
 }
 
 async function main(): Promise<void> {
+  const connection = await readDesktopConnection(app.getPath('userData'), process.env)
+  if (connection.mode === 'remote') {
+    focusPrimaryWindow = () => {
+      const window = BrowserWindow.getAllWindows().find(candidate => !candidate.isDestroyed() && candidate.getParentWindow() === null)
+      if (window === undefined) return
+      if (window.isMinimized()) window.restore()
+      window.show()
+      window.focus()
+    }
+    runRemoteDesktop({ messages: () => currentDesktopLocale().messages, url: connection.url, userData: app.getPath('userData') })
+    return
+  }
   const desktopSettings = await readDesktopSettings(app.getPath('userData'))
   void pruneCrashReports(app.getPath('logs'))
   const journalDirectory = process.env.DSH_DESKTOP_UPDATE_JOURNAL_DIR
@@ -1211,6 +1225,10 @@ async function main(): Promise<void> {
     { label: currentDesktopLocale().messages.checkUpdatesMenu, click: () => { void openUpdatePrompt(true) } },
     ...process.platform === 'darwin' || process.platform === 'win32'
       ? [{ label: currentDesktopLocale().messages.cliCommandMenu, click: () => { void commandManager.show() } }] : [],
+    { label: currentDesktopLocale().messages.connectServerMenu, click: () => {
+      showConnectionWindow({ messages: () => currentDesktopLocale().messages, current: { mode: 'local' },
+        userData: app.getPath('userData'), parent: mainWindow })
+    } },
     { type: 'separator' },
     ...development ? [
       { label: currentDesktopLocale().messages.reloadPageMenu, role: 'reload' as const },
