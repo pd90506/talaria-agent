@@ -15,6 +15,7 @@ Desktop runs the Harness workspace in a native application. This reference cover
 - [Application overview](#application-overview)
 - [Terminal command](#terminal-command)
 - [Closing the window and quitting](#closing-the-window-and-quitting)
+- [Remote server](#remote-server)
 - [Key technical decisions](#key-technical-decisions)
 - [Bundled command runtime](#bundled-command-runtime)
 - [Installation ownership](#installation-ownership)
@@ -84,6 +85,12 @@ The mandatory update confirmation includes the installation wait notice on Windo
 The confirmation is skipped when the installer restart already confirmed task interruption, when the fatal-recovery dialog exits or restarts, when the development Restart App and Host command runs, and during operating-system shutdown, restart, or log-off: Windows sets this on the definitive session-end message; macOS sets it on the power-off notification, and because another application can still cancel that shutdown, the next focus or show of the main window clears it. Installer-owned quit cancels any pending ordinary quit decision; late inspection results and dialog answers cannot open another confirmation or repeat cleanup. A user-initiated update download that finishes while the window is hidden defers its Install and Restart confirmation until the window is shown again; the mandatory flow keeps its taskbar and Dock attention. The Windows installer and uninstaller tell a user whose application is still running to quit it from the system tray. Desktop does not enable scheduled tasks by default, so the scheduled-task explanations appear only once that feature is on; reminders fire only in loaded sessions, and unloaded sessions are neither counted nor resumed until they are opened.
 
 The tray renderer enlarges the whale by 20% around the tile center while preserving the background and aspect ratio; application and installer icons retain their original proportions.
+
+<a id="remote-server"></a>
+
+## Remote server
+
+Desktop can open a [dsh server](../../packages/bundle/server-app/README.md) instead of starting its bundled Host. On macOS, choose **Connect to Server…** in the application menu, enter the address that `dsh server` prints, such as `https://box.tailnet.ts.net/`, and select **Connect**; Desktop stores the address in `userData/desktop/connection.json` and restarts. In remote mode no local Host starts, and the window loads the server's Web application without a preload bridge. The server authenticates the window: a computer signed in to the same Tailnet as the server's owner opens it without a launch token. The **File** menu offers **Connect to Server…** to change the address and **Run on this computer** to return to the bundled Host. When the server cannot be loaded, the window shows the failure with **Retry**, **Connect to Server…**, and **Run on this computer**. `DSH_DESKTOP_SERVER_URL` selects a server for one launch without changing the stored choice; an invalid value fails startup.
 
 <a id="key-technical-decisions"></a>
 
@@ -384,6 +391,7 @@ An unpackaged Electron process uses `.desktop-build/development/project` under i
 
 ## Known limitations
 
+- Remote mode shows the server's Web application only: native file drag, the native directory picker, update checks, and the welcome flow belong to the bundled Host and are unavailable. Windows has no application menu, so remote mode there is selected through `DSH_DESKTOP_SERVER_URL` or the connection file.
 - Account sign-in is not connected; the Sign in button is disabled. Windows material rendering still requires platform QA.
 
 - Release signing, notarization, update hosting, and previous-version installed-artifact qualification require the production release environment.

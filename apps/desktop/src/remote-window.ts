@@ -28,6 +28,8 @@ function plainWindow(width: number, height: number): BrowserWindow {
  */
 async function switchConnection(userData: string, connection: DesktopConnection): Promise<void> {
   await writeDesktopConnection(userData, connection)
+  // The relaunched process inherits this environment; an explicit choice replaces the launch override.
+  delete process.env.DSH_DESKTOP_SERVER_URL
   app.relaunch()
   app.quit()
 }

@@ -15,6 +15,7 @@ Desktop 在原生应用中运行 Harness 工作区。本参考文档说明应用
 - [应用概览](#application-overview)
 - [终端命令](#terminal-command)
 - [关闭窗口与退出](#closing-the-window-and-quitting)
+- [远端服务器](#remote-server)
 - [关键技术决策](#key-technical-decisions)
 - [内置命令运行时](#bundled-command-runtime)
 - [安装归属](#installation-ownership)
@@ -84,6 +85,12 @@ Windows 在整个运行期间常驻托盘图标。悬停提示为产品名，单
 以下情况跳过确认：安装更新的重启已确认过任务中断、致命错误恢复对话框中的退出或重启、开发版"重启应用与 Host"命令，以及操作系统关机、重启或注销：Windows 在确定性的会话结束消息上设置该状态；macOS 在关机通知上设置，而其他应用仍可能取消这次关机，因此主窗口下一次获得焦点或显示时会清除它。安装器接管退出时会取消尚未结束的普通退出决策；晚到的查询结果和弹框答复不会再次打开确认框或重复清理。窗口隐藏期间完成的用户主动发起的更新下载，把"安装并重启"确认推迟到窗口再次显示时；强制更新流程沿用其任务栏和 Dock 提醒。Windows 安装程序和卸载程序在应用仍在运行时提示用户先在系统托盘中退出。Desktop 默认未开启定时任务，定时任务的说明只在该功能开启后出现；提醒只在已加载的会话中触发，未加载的会话既不计入，也要等到打开后才会继续。
 
 托盘渲染器以底板中心为基准将鲸鱼放大 20%，保留背景和宽高比；应用和安装器图标保持原有比例。
+
+<a id="remote-server"></a>
+
+## 远端服务器
+
+Desktop 可以打开 [dsh server](../../packages/bundle/server-app/README.zh.md)，而不启动内置 Host。在 macOS 上，从应用菜单选择 **连接到服务器…**，输入 `dsh server` 打印的地址（例如 `https://box.tailnet.ts.net/`），然后选择 **连接**；Desktop 会把地址保存到 `userData/desktop/connection.json` 并重启。远端模式不启动本地 Host，窗口在没有 preload 桥的情况下加载服务器的 Web 应用。由服务器认证窗口：与服务器 owner 登录同一 Tailnet 的电脑无需启动令牌即可打开。**File** 菜单提供 **连接到服务器…** 以修改地址，以及 **在本机运行** 以回到内置 Host。服务器无法加载时，窗口显示失败信息以及 **重试**、**连接到服务器…** 和 **在本机运行**。`DSH_DESKTOP_SERVER_URL` 只为单次启动选择服务器，不改变已保存的选择；无效值会让启动失败。
 
 <a id="key-technical-decisions"></a>
 
@@ -384,6 +391,7 @@ node apps/desktop/node_modules/pnpm/bin/pnpm.mjs --dir apps/desktop run test:upd
 
 ## 已知限制
 
+- 远端模式只显示服务器的 Web 应用：原生文件拖拽、原生目录选择器、更新检查和欢迎流程属于内置 Host，均不可用。Windows 没有应用菜单，因此只能通过 `DSH_DESKTOP_SERVER_URL` 或连接文件选择远端模式。
 - 账号登录尚未接入；登录按钮禁用。Windows 材质效果仍需平台验证。
 
 - 发布签名、公证、更新托管和跨上一版本的已安装产物验证需要生产发布环境。
