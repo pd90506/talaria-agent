@@ -62,14 +62,14 @@ it('uses explicit locations without moving legacy state', () => {
   expect(existsSync(join(root, '.desktop-dev'))).toBe(false)
 })
 
-it.skipIf(process.platform === 'win32')('does not move state that a running Harness Dev still owns', () => {
+it.skipIf(process.platform === 'win32')('does not move state that a running Talaria Agent Dev still owns', () => {
   const root = fixture()
   const legacy = join(root, '.desktop-build', 'development')
   mkdirSync(join(legacy, 'home'), { recursive: true })
   mkdirSync(join(legacy, 'electron-user-data'))
   symlinkSync(`host-${String(process.pid)}`, join(legacy, 'electron-user-data', 'SingletonLock'))
 
-  expect(() => prepareDevelopmentState(root, {})).toThrow('a running Harness Dev still uses')
+  expect(() => prepareDevelopmentState(root, {})).toThrow('a running Talaria Agent Dev still uses')
   expect(existsSync(join(legacy, 'home'))).toBe(true)
   expect(existsSync(join(root, '.desktop-dev'))).toBe(false)
 })
