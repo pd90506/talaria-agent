@@ -1,6 +1,6 @@
 /** Remote connection mode: one window showing a dsh server's Web application, and the connection chooser. */
 import { fileURLToPath } from 'node:url'
-import { app, BrowserWindow, ipcMain, Menu, shell, type IpcMainInvokeEvent, type MenuItemConstructorOptions } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, shell, type IpcMainInvokeEvent } from 'electron'
 import type { DesktopConnectionChangeResult, DesktopConnectionTarget } from '@deepseek-ai/dsh-client-ui-settings-general/types'
 import { DESKTOP_IPC, REMOTE_ORIGIN_ARGUMENT } from './ipc.ts'
 import type { DesktopMessages } from './locale.ts'
@@ -188,19 +188,11 @@ export function runRemoteDesktop(options: {
     load(next)
     return next
   }
-  const messages = options.messages()
-  const darwin = process.platform === 'darwin'
-  const connectionItems: MenuItemConstructorOptions[] = [
-    { label: messages.connectServerMenu, click: chooser },
-    { label: messages.connectionUseLocal, click: () => { void switchConnection(options.userData, { mode: 'local' }).catch((error: unknown) => { console.error(error) }) } },
-  ]
-  Menu.setApplicationMenu(Menu.buildFromTemplate([
-    ...darwin ? [{ role: 'appMenu' as const }] : [],
-    { label: messages.fileMenu, submenu: [...connectionItems, { type: 'separator' }, darwin ? { role: 'close' } : { role: 'quit' }] },
-    { role: 'editMenu' },
-    { role: 'viewMenu' },
-    { role: 'windowMenu' },
-  ]))
+  // Settings owns the connection choice. macOS keeps the standard menus that carry its editing and window shortcuts;
+  // Windows and Linux show no menu bar, and Chromium still handles the editing shortcuts.
+  Menu.setApplicationMenu(process.platform === 'darwin'
+    ? Menu.buildFromTemplate([{ role: 'appMenu' }, { role: 'editMenu' }, { role: 'windowMenu' }])
+    : null)
   app.on('activate', () => {
     if (window === undefined || window.isDestroyed()) window = open()
     else window.show()
