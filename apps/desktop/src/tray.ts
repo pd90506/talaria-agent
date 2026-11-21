@@ -12,13 +12,15 @@ export interface DesktopTrayOptions {
   readonly open: () => void
   /** Request quit through the same confirmation as every other quit entry. */
   readonly quit: () => void
+  /** Open the server connection chooser. */
+  readonly connect: () => void
 }
 
 /** Tray icon present for the whole run, not only while the window is hidden. */
 export class DesktopTray {
   private tray: Tray | undefined
 
-  /** @param options - Icon path, locale reader, and the open and quit actions. */
+  /** @param options - Icon path, locale reader, and the open, connect, and quit actions. */
   constructor(private readonly options: DesktopTrayOptions) {
     const tray = new Tray(nativeImage.createFromPath(options.iconPath))
     this.tray = tray
@@ -34,6 +36,7 @@ export class DesktopTray {
     tray.setToolTip(messages.aboutProduct)
     tray.setContextMenu(Menu.buildFromTemplate([
       { label: messages.openApplication, click: () => { this.options.open() } },
+      { label: messages.connectServerMenu, click: () => { this.options.connect() } },
       { type: 'separator' },
       { label: messages.quitApplication, click: () => { this.options.quit() } },
     ]))

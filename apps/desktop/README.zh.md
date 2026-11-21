@@ -76,7 +76,7 @@ macOS 安装会创建 `/usr/local/bin/dsh`；目录权限需要时，系统会�
 
 关闭主窗口（macOS 的关闭按钮和 ⌘W；Windows 的 ×、Alt+F4 和任务栏"关闭窗口"）会隐藏窗口；Windows 首次隐藏前需要确认。页面和 Host 继续运行，任务不受影响，下次显示时仍是原来的文档，会话、草稿和滚动位置都保留；macOS 全屏窗口先退出全屏再隐藏。macOS 通过 Dock 图标、再次启动或 `dsh://open` 找回窗口，Windows 通过托盘找回。最小化行为不变。进入工作区前关闭欢迎窗口，Windows 上走退出流程，macOS 上应用留在 Dock 中且没有窗口。
 
-Windows 在整个运行期间常驻托盘图标。悬停提示为产品名，单击显示并聚焦窗口，右键菜单提供壳语言下的"打开 Talaria Agent"和"退出 Talaria Agent"。首次隐藏前复用更新弹窗，显示“正在运行的任务不会中断，可在系统托盘中重新打开窗口”和“确认”按钮。确认后隐藏窗口，并在 Electron userData 下写入 `background-close-confirmed`；Esc、关闭弹窗或加载失败均保持主窗口可见，不记录确认。重复关闭请求会聚焦已有壳弹窗。覆盖更新保留标记，卸载删除标记。旧的 `background-notice-shown` 标记不会跳过此确认。关闭窗口不发送系统通知。托盘位图是 `resources/tray-windows.ico`，由 `pnpm run render:tray-icon` 从 `resources/icon-windows.svg` 按 16、20、24、32、40、48、64 像素分别渲染，打包为 `resources/tray.ico`。macOS 不提供菜单栏图标。
+Windows 在整个运行期间常驻托盘图标。悬停提示为产品名，单击显示并聚焦窗口，右键菜单提供壳语言下的"打开 Talaria Agent"、"连接到服务器…"和"退出 Talaria Agent"。首次隐藏前复用更新弹窗，显示“正在运行的任务不会中断，可在系统托盘中重新打开窗口”和“确认”按钮。确认后隐藏窗口，并在 Electron userData 下写入 `background-close-confirmed`；Esc、关闭弹窗或加载失败均保持主窗口可见，不记录确认。重复关闭请求会聚焦已有壳弹窗。覆盖更新保留标记，卸载删除标记。旧的 `background-notice-shown` 标记不会跳过此确认。关闭窗口不发送系统通知。托盘位图是 `resources/tray-windows.ico`，由 `pnpm run render:tray-icon` 从 `resources/icon-windows.svg` 按 16、20、24、32、40、48、64 像素分别渲染，打包为 `resources/tray.ico`。macOS 不提供菜单栏图标。
 
 所有普通退出入口——⌘Q、应用菜单、Dock 菜单、Windows 托盘和标题栏"应用程序"菜单，以及关闭欢迎窗口引起的退出——都先向 Host 查询退出会中断什么。Host 通过私有 IPC 通道回答两项事实：与更新重启检查同一口径的运行中任务（运行中的 agent，包括子代理和等待审批的回合、排队消息、运行中或停止中的后台任务），以及本次运行中已加载会话里由 `workspace/session-activity` 的 `schedule` family 报告的已挂定时器的提醒。两项都没有时直接退出，不弹框。否则弹出一个没有父窗口的原生消息框——隐藏的窗口保持隐藏——标题为**退出 Talaria Agent？**，正文为三种本地化说明之一：正在运行的任务将会中断、应用关闭期间定时任务不会运行，或两者兼有。"退出"是默认按钮，Esc 等同"取消"；macOS 上"取消"在"退出"左侧，Windows 上"退出"在"取消"左侧，Windows 任务对话框显示应用图标且不跟随应用主题、始终为浅色。Host 尚未就绪或已失败时不可能有任务在跑，直接退出。查询失败或 Host 超过两秒截止时间未答复，按运行中任务处理。弹框打开期间，再次请求退出只会并入同一弹框而不叠加新弹框（macOS 上还会把它提到前面；Electron 不暴露 Windows 任务对话框的句柄）；任务开始或结束不会改变文案；点"退出"不再重新查询即停止应用；点"取消"不发生任何变化。取消由关闭欢迎窗口引起的退出时，欢迎窗口会重新显示。
 
@@ -90,7 +90,7 @@ Windows 在整个运行期间常驻托盘图标。悬停提示为产品名，单
 
 ## 远端服务器
 
-Desktop 可以打开 [dsh server](../../packages/bundle/server-app/README.zh.md)，而不启动内置 Host。在 macOS 上，从应用菜单选择 **连接到服务器…**，输入 `dsh server` 打印的地址（例如 `https://box.tailnet.ts.net/`），然后选择 **连接**；Desktop 会把地址保存到 `userData/desktop/connection.json` 并重启。远端模式不启动本地 Host，窗口在没有 preload 桥的情况下加载服务器的 Web 应用。由服务器认证窗口：与服务器 owner 登录同一 Tailnet 的电脑无需启动令牌即可打开。**File** 菜单提供 **连接到服务器…** 以修改地址，以及 **在本机运行** 以回到内置 Host。服务器无法加载时，窗口显示失败信息以及 **重试**、**连接到服务器…** 和 **在本机运行**。`DSH_DESKTOP_SERVER_URL` 只为单次启动选择服务器，不改变已保存的选择；无效值会让启动失败。
+Desktop 可以打开 [dsh server](../../packages/bundle/server-app/README.zh.md)，而不启动内置 Host。从应用菜单（Windows 上为标题栏的应用菜单或托盘菜单）选择 **连接到服务器…**，输入 `dsh server` 打印的地址（例如 `https://box.tailnet.ts.net/`），然后选择 **连接**；Desktop 会把地址保存到 `userData/desktop/connection.json` 并重启。远端模式不启动本地 Host，窗口在没有 preload 桥的情况下加载服务器的 Web 应用。由服务器认证窗口：与服务器 owner 登录同一 Tailnet 的电脑无需启动令牌即可打开。**File** 菜单提供 **连接到服务器…** 以修改地址，以及 **在本机运行** 以回到内置 Host。服务器无法加载时，窗口显示失败信息以及 **重试**、**连接到服务器…** 和 **在本机运行**。`DSH_DESKTOP_SERVER_URL` 只为单次启动选择服务器，不改变已保存的选择；无效值会让启动失败。
 
 <a id="key-technical-decisions"></a>
 
@@ -379,7 +379,7 @@ node apps/desktop/node_modules/pnpm/bin/pnpm.mjs --dir apps/desktop run test:upd
 
 ## 已知限制
 
-- 远端模式只显示服务器的 Web 应用：原生文件拖拽、原生目录选择器、更新检查和欢迎流程属于内置 Host，均不可用。Windows 没有应用菜单，因此只能通过 `DSH_DESKTOP_SERVER_URL` 或连接文件选择远端模式。
+- 远端模式只显示服务器的 Web 应用：原生文件拖拽、原生目录选择器、更新检查和欢迎流程属于内置 Host，均不可用。
 - 账号登录尚未接入；登录按钮禁用。Windows 材质效果仍需平台验证。
 
 - 发布签名、公证、更新托管和跨上一版本的已安装产物验证需要生产发布环境。

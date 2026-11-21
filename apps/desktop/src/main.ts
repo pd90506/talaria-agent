@@ -1195,6 +1195,10 @@ async function main(): Promise<void> {
       { role: 'hideOthers', label: currentDesktopLocale().messages.hideOtherApplications },
       { role: 'unhide', label: currentDesktopLocale().messages.showAllApplications }, { type: 'separator' }]
     : []
+  const showServerConnection = (): void => {
+    showConnectionWindow({ messages: () => currentDesktopLocale().messages, current: { mode: 'local' },
+      userData: app.getPath('userData'), parent: mainWindow })
+  }
   const applicationItems = (): MenuItemConstructorOptions[] => [
     // Windows has no system About panel; Electron's fallback is a plain
     // message box, so the shell shows its own dimmed dialog instead.
@@ -1206,10 +1210,7 @@ async function main(): Promise<void> {
     { label: currentDesktopLocale().messages.checkUpdatesMenu, click: () => { void openUpdatePrompt(true) } },
     ...process.platform === 'darwin' || process.platform === 'win32'
       ? [{ label: currentDesktopLocale().messages.cliCommandMenu, click: () => { void commandManager.show() } }] : [],
-    { label: currentDesktopLocale().messages.connectServerMenu, click: () => {
-      showConnectionWindow({ messages: () => currentDesktopLocale().messages, current: { mode: 'local' },
-        userData: app.getPath('userData'), parent: mainWindow })
-    } },
+    { label: currentDesktopLocale().messages.connectServerMenu, click: showServerConnection },
     { type: 'separator' },
     ...development ? [
       { label: currentDesktopLocale().messages.reloadPageMenu, role: 'reload' as const },
@@ -1244,7 +1245,7 @@ async function main(): Promise<void> {
     // The tray is the way back to a hidden window; without it, relaunching the application still focuses it.
     try {
       tray = new DesktopTray({ iconPath: trayIconPath, locale: currentDesktopLocale,
-        open: () => { focusPrimaryWindow() }, quit: () => { app.quit() } })
+        open: () => { focusPrimaryWindow() }, quit: () => { app.quit() }, connect: showServerConnection })
     } catch (error) { console.warn('desktop tray: unavailable', error) }
   }
   const backgroundNotice = process.platform === 'win32'
