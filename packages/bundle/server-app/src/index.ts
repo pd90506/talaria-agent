@@ -8,6 +8,7 @@
 import { execFile } from 'node:child_process'
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
+import { registerDesktopBoot } from './desktop-boot.ts'
 import { findServeUrl, parseStatus, type TailscaleNode } from './tailscale-status.ts'
 
 export type { TailscaleNode } from './tailscale-status.ts'
@@ -55,12 +56,13 @@ function query(config: Config, args: string[], signal: AbortSignal): Promise<str
 }
 
 /**
- * Read the local Tailscale node and provide it as the `tailscaleNode` service.
+ * Read the local Tailscale node and provide it as the `tailscaleNode` service, and serve the Desktop remote boot route.
  * A missing CLI, a stopped node, or a machine without MagicDNS fails the load.
  * @param ctx - plugin context.
  * @param config - validated CLI location, deadline, and listener port.
  */
 export async function apply(ctx: Context, config: Config): Promise<void> {
+  registerDesktopBoot(ctx)
   const controller = new AbortController()
   ctx.effect(() => () => { controller.abort() }, 'server-app: Tailscale queries')
   const node = parseStatus(await query(config, ['status', '--json'], controller.signal))

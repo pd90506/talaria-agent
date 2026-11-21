@@ -3369,7 +3369,7 @@ export interface JsonRpcConfig {
 
 ## `@deepseek-ai/dsh-server-app`
 
-- `source`: [`packages/bundle/server-app/src/index.ts:22`](../packages/bundle/server-app/src/index.ts)
+- `source`: [`packages/bundle/server-app/src/index.ts:23`](../packages/bundle/server-app/src/index.ts)
 
 ```ts config-catalog
 /** How this plugin reaches the local Tailscale node. */

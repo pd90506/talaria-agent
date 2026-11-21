@@ -1,39 +1,28 @@
-/** Remote connection mode: one window showing a dsh server's Web application, and the connection chooser. */
-import { fileURLToPath } from 'node:url'
-import { app, BrowserWindow, ipcMain, Menu, shell, type IpcMainInvokeEvent } from 'electron'
+/** Connection choice: the chooser window and the Settings IPC that store a target and restart Desktop into it. */
+import { app, BrowserWindow, ipcMain, type IpcMainInvokeEvent } from 'electron'
 import type { DesktopConnectionChangeResult, DesktopConnectionTarget } from '@deepseek-ai/dsh-client-ui-settings-general/types'
-import { DESKTOP_IPC, REMOTE_ORIGIN_ARGUMENT } from './ipc.ts'
+import { DESKTOP_IPC } from './ipc.ts'
 import type { DesktopMessages } from './locale.ts'
 import {
   connectionPageUrl,
   parseConnectionIntent,
   parseConnectionTarget,
-  remoteFailurePageUrl,
   writeDesktopConnection,
   type DesktopConnection,
 } from './remote-connection.ts'
 
 /**
- * Window options shared by the remote application and the connection chooser.
- * @param width - initial width.
- * @param height - initial height.
- * @param remoteOrigin - server origin that may receive the connection-only preload bridge; omitted for the chooser.
- * @returns the hidden window.
+ * Create the hidden chooser window; it loads only the local connection page.
+ * @returns the window.
  */
-function plainWindow(width: number, height: number, remoteOrigin?: string): BrowserWindow {
+function chooserWindow(): BrowserWindow {
   return new BrowserWindow({
-    width,
-    height,
+    width: 520,
+    height: 320,
     minWidth: 420,
-    minHeight: 320,
+    minHeight: 280,
     show: false,
-    webPreferences: {
-      nodeIntegration: false, contextIsolation: true, sandbox: true, webSecurity: true,
-      ...remoteOrigin === undefined ? {} : {
-        preload: fileURLToPath(new URL('./preload-remote.cjs', import.meta.url)),
-        additionalArguments: [`${REMOTE_ORIGIN_ARGUMENT}${remoteOrigin}`],
-      },
-    },
+    webPreferences: { nodeIntegration: false, contextIsolation: true, sandbox: true, webSecurity: true },
   })
 }
 
@@ -89,6 +78,7 @@ export function handleConnectionIpc(options: {
  * @param options.current - the connection in use.
  * @param options.userData - Electron userData.
  * @param options.parent - window the chooser attaches to, if any.
+ * @param options.error - message shown above the actions, such as an unreachable server.
  * @returns the chooser window.
  */
 export function showConnectionWindow(options: {
@@ -96,8 +86,9 @@ export function showConnectionWindow(options: {
   current: DesktopConnection
   userData: string
   parent?: BrowserWindow | undefined
+  error?: string | undefined
 }): BrowserWindow {
-  const window = plainWindow(520, 300)
+  const window = chooserWindow()
   if (options.parent !== undefined && !options.parent.isDestroyed()) window.setParentWindow(options.parent)
   window.setMenuBarVisibility(false)
   window.webContents.on('will-navigate', (event, href) => {
@@ -115,9 +106,6 @@ export function showConnectionWindow(options: {
       case 'local':
         void switchConnection(options.userData, { mode: 'local' }).catch((error: unknown) => { console.error(error) })
         return
-      case 'edit':
-      case 'retry':
-        return
       case 'cancel':
         window.close()
         return
@@ -125,77 +113,6 @@ export function showConnectionWindow(options: {
   })
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
   window.once('ready-to-show', () => { window.show() })
-  void window.loadURL(connectionPageUrl(options.messages(), options.current))
+  void window.loadURL(connectionPageUrl(options.messages(), options.current, options.error))
   return window
-}
-
-/**
- * Run Desktop against a remote dsh server: no local Host starts, and the window loads the server's Web application.
- * Authentication belongs to the server, such as Tailscale identity behind `tailscale serve`.
- * @param options - localized copy, the server address, and Electron userData.
- * @param options.messages - localized shell copy.
- * @param options.url - normalized server application root.
- * @param options.userData - Electron userData.
- */
-export function runRemoteDesktop(options: {
-  messages: () => DesktopMessages
-  url: string
-  userData: string
-}): void {
-  const current: DesktopConnection = { mode: 'remote', url: options.url }
-  const origin = new URL(options.url).origin
-  let window: BrowserWindow | undefined
-  const chooser = (): void => {
-    showConnectionWindow({ messages: options.messages, current, userData: options.userData, parent: window })
-  }
-  const load = (target: BrowserWindow): void => {
-    void target.loadURL(options.url).catch((error: unknown) => {
-      if (error instanceof Error && 'code' in error && error.code === 'ERR_ABORTED') return
-      console.error(error)
-    })
-  }
-  handleConnectionIpc({ current, userData: options.userData, assertSender: (event) => {
-    const frame = event.senderFrame
-    if (window === undefined || window.isDestroyed() || event.sender !== window.webContents || frame === null
-      || frame !== window.webContents.mainFrame || new URL(frame.url).origin !== origin) {
-      throw new Error('desktop connection: rejected IPC from an unowned renderer')
-    }
-  } })
-  const open = (): BrowserWindow => {
-    const next = plainWindow(1280, 820, origin)
-    next.webContents.setWindowOpenHandler(({ url }) => {
-      if (['http:', 'https:'].includes(new URL(url).protocol)) void shell.openExternal(url)
-      return { action: 'deny' }
-    })
-    next.webContents.on('will-navigate', (event, href) => {
-      const intent = parseConnectionIntent(href)
-      if (intent !== undefined) {
-        event.preventDefault()
-        if (intent.kind === 'retry') load(next)
-        else if (intent.kind === 'local') void switchConnection(options.userData, { mode: 'local' }).catch((error: unknown) => { console.error(error) })
-        else chooser()
-        return
-      }
-      if (new URL(href).origin === origin) return
-      event.preventDefault()
-      if (['http:', 'https:'].includes(new URL(href).protocol)) void shell.openExternal(href)
-    })
-    next.webContents.on('did-fail-load', (_event, code, description, failedUrl, isMainFrame) => {
-      if (!isMainFrame || code === -3 || new URL(failedUrl).origin !== origin) return
-      void next.loadURL(remoteFailurePageUrl(options.messages(), options.url, `${description} (${String(code)})`))
-    })
-    next.once('ready-to-show', () => { next.show() })
-    load(next)
-    return next
-  }
-  // Settings owns the connection choice. macOS keeps the standard menus that carry its editing and window shortcuts;
-  // Windows and Linux show no menu bar, and Chromium still handles the editing shortcuts.
-  Menu.setApplicationMenu(process.platform === 'darwin'
-    ? Menu.buildFromTemplate([{ role: 'appMenu' }, { role: 'editMenu' }, { role: 'windowMenu' }])
-    : null)
-  app.on('activate', () => {
-    if (window === undefined || window.isDestroyed()) window = open()
-    else window.show()
-  })
-  window = open()
 }

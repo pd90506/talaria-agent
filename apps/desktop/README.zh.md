@@ -90,7 +90,7 @@ Windows 在整个运行期间常驻托盘图标。悬停提示为产品名，单
 
 ## 远端服务器
 
-Desktop 可以打开 [dsh server](../../packages/bundle/server-app/README.zh.md)，而不启动内置 Host。在「设置 → 通用」的 **服务器连接** 中，或从应用菜单（Windows 上为标题栏的应用菜单或托盘菜单）选择 **连接到服务器…**，输入 `dsh server` 打印的地址（例如 `https://box.tailnet.ts.net/`），然后选择 **连接**；Desktop 会把地址保存到 `userData/desktop/connection.json` 并重启。远端模式不启动本地 Host，窗口加载服务器的 Web 应用，并通过只向该服务器 origin 暴露连接选择的 preload 桥。由服务器认证窗口：与服务器 owner 登录同一 Tailnet 的电脑无需启动令牌即可打开。在「设置 → 通用」中可以修改地址或回到内置 Host。远端窗口在 Windows 和 Linux 上没有菜单栏；macOS 保留标准的应用、编辑和窗口菜单。服务器无法加载时，窗口显示失败信息以及 **重试**、**连接到服务器…** 和 **在本机运行**。`DSH_DESKTOP_SERVER_URL` 只为单次启动选择服务器，不改变已保存的选择；无效值会让启动失败。
+Desktop 可以打开 [dsh server](../../packages/bundle/server-app/README.zh.md)，而不启动内置 Host。在「设置 → 通用」的 **服务器连接** 中，或从应用菜单（Windows 上为标题栏的应用菜单或托盘菜单）选择 **连接到服务器…**，输入 `dsh server` 打印的地址（例如 `https://box.tailnet.ts.net/`），然后选择 **连接**；Desktop 会把地址保存到 `userData/desktop/connection.json` 并重启。远端模式不启动本地 Host，使用同样的窗口、标题栏和内置工作区界面连接服务器。Desktop 从服务器的 `/desktop/boot` 路由读取启动注入，并把工作区的 HTTP 和 WebSocket 请求不带本地凭据地转发给服务器，由服务器认证：与服务器 owner 登录同一 Tailnet 的电脑无需启动令牌。服务器无法访问时，会打开连接窗口，显示失败信息、地址和 **在本机运行**。`DSH_DESKTOP_SERVER_URL` 只为单次启动选择服务器，不改变已保存的选择；无效值会让启动失败。
 
 <a id="key-technical-decisions"></a>
 
@@ -379,7 +379,7 @@ node apps/desktop/node_modules/pnpm/bin/pnpm.mjs --dir apps/desktop run test:upd
 
 ## 已知限制
 
-- 远端模式只显示服务器的 Web 应用：原生文件拖拽、原生目录选择器、更新检查和欢迎流程属于内置 Host，均不可用。
+- 远端模式下，原生目录选择器列出的是本机文件夹，文件拖拽使用下载的副本，因为服务器上的文件不在本机；退出时不会询问服务器上的任务，它们会继续运行。
 - 账号登录尚未接入；登录按钮禁用。Windows 材质效果仍需平台验证。
 
 - 发布签名、公证、更新托管和跨上一版本的已安装产物验证需要生产发布环境。

@@ -144,7 +144,7 @@ async function request(port: number, path: string, method: 'GET' | 'POST', login
 }
 
 describe.skipIf(!existsSync(dshBin) || process.platform === 'win32')('server profile over Tailscale Serve', () => {
-  it('advertises the Tailnet root and admits only the machine owner without a launch token', async () => {
+  it('advertises the Tailnet root, admits only the machine owner without a launch token, and serves Desktop boot data', async () => {
     const root = mkdtempSync(join(tmpdir(), 'dsh-server-tailscale-'))
     let server: RunningServer | undefined
     try {
@@ -157,6 +157,10 @@ describe.skipIf(!existsSync(dshBin) || process.platform === 'win32')('server pro
       const created = await request(server.port, '/api/session/create', 'POST', 'alice@github')
       expect(created.status).toBe(200)
       expect(JSON.parse(created.body)).toMatchObject({ result: { ok: true } })
+      const boot = await request(server.port, '/desktop/boot', 'GET', 'alice@github')
+      expect(boot.status).toBe(200)
+      expect(Array.isArray((JSON.parse(boot.body) as { injections?: unknown }).injections)).toBe(true)
+      expect((await request(server.port, '/desktop/boot', 'GET', 'mallory@github')).status).toBe(401)
       expect((await request(server.port, '/', 'GET', 'mallory@github')).status).toBe(401)
       expect((await request(server.port, '/api/session/create', 'POST')).status).toBe(401)
       const stopped = await server.stop()

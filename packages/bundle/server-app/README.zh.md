@@ -33,6 +33,8 @@ dsh server
 
 在任何以本机 owner 身份登录 Tailscale 的设备上打开输出的 `dsh web:` 根地址，例如 `https://box.tail1234.ts.net/`。`dsh server` 接受 Web 参数；`--port` 同时改变监听端口以及启动检查期望 `tailscale serve` 指向的端口，`--public-url` 替换检测到的根地址。如果没有 `tailscale serve` 处理器代理到该监听器，启动时会给出警告和需要执行的命令。启动令牌 URL 仍可用于本机访问。
 
+owner 可以读取 `GET /desktop/boot`，它返回请求者 Peer 的 `{ injections }`；[Desktop](../../../apps/desktop/README.zh.md#remote-server) 用它在本服务器上运行内置工作区。其他身份会收到 403。
+
 Tailscale CLI 缺失、节点未运行或 MagicDNS 关闭时，启动失败。打了 tag 的机器没有 owner 登录名，`allowedLogins` 为空，认证会在加载时失败；请在 `$DSH_HOME/profiles/server/cordis.patch.yml` 中覆盖 `authentication-tailscale` 行：
 
 ```yaml

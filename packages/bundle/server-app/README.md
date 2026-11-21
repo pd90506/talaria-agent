@@ -33,6 +33,8 @@ dsh server
 
 Open the printed `dsh web:` root, such as `https://box.tail1234.ts.net/`, from any device signed in as the machine's owner. `dsh server` accepts the Web flags; `--port` changes both the listener and the port the startup check expects `tailscale serve` to target, and `--public-url` replaces the detected root. When no `tailscale serve` handler proxies to the listener, startup warns with the command to run. The launch-token URL still works for local access.
 
+The owner can read `GET /desktop/boot`, which returns `{ injections }` for the requesting Peer; [Desktop](../../../apps/desktop/README.md#remote-server) uses it to run its packaged workspace against this server. Other principals receive 403.
+
 Startup fails when the Tailscale CLI is missing, the node is not running, or MagicDNS is off. A tagged machine has no owner login, so `allowedLogins` is empty and authentication fails at load; override the `authentication-tailscale` row in `$DSH_HOME/profiles/server/cordis.patch.yml`:
 
 ```yaml

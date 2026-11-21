@@ -90,7 +90,7 @@ The tray renderer enlarges the character by 20% around the tile center while pre
 
 ## Remote server
 
-Desktop can open a [dsh server](../../packages/bundle/server-app/README.md) instead of starting its bundled Host. Choose **Server connection** in Settings → General, or **Connect to Server…** in the application menu (on Windows, the title-bar Application menu or the tray menu), enter the address that `dsh server` prints, such as `https://box.tailnet.ts.net/`, and select **Connect**; Desktop stores the address in `userData/desktop/connection.json` and restarts. In remote mode no local Host starts, and the window loads the server's Web application with a preload bridge that exposes only the connection choice to that server's origin. The server authenticates the window: a computer signed in to the same Tailnet as the server's owner opens it without a launch token. Settings → General changes the address or returns to the bundled Host. The remote window has no menu bar on Windows and Linux; macOS keeps the standard application, Edit, and Window menus. When the server cannot be loaded, the window shows the failure with **Retry**, **Connect to Server…**, and **Run on this computer**. `DSH_DESKTOP_SERVER_URL` selects a server for one launch without changing the stored choice; an invalid value fails startup.
+Desktop can open a [dsh server](../../packages/bundle/server-app/README.md) instead of starting its bundled Host. Choose **Server connection** in Settings → General, or **Connect to Server…** in the application menu (on Windows, the title-bar Application menu or the tray menu), enter the address that `dsh server` prints, such as `https://box.tailnet.ts.net/`, and select **Connect**; Desktop stores the address in `userData/desktop/connection.json` and restarts. In remote mode no local Host starts; the same window, title bar, and packaged workspace run against the server. Desktop reads the startup injections from the server's `/desktop/boot` route and forwards the workspace's HTTP and WebSocket requests to the server without a local credential, so the server authenticates them: a computer signed in to the same Tailnet as the server's owner needs no launch token. When the server cannot be reached, the connection window opens with the failure, the address, and **Run on this computer**. `DSH_DESKTOP_SERVER_URL` selects a server for one launch without changing the stored choice; an invalid value fails startup.
 
 <a id="key-technical-decisions"></a>
 
@@ -379,7 +379,7 @@ An unpackaged Electron process uses `.desktop-build/development/project` under i
 
 ## Known limitations
 
-- Remote mode shows the server's Web application only: native file drag, the native directory picker, update checks, and the welcome flow belong to the bundled Host and are unavailable.
+- In remote mode the native directory picker lists this computer's folders and file drag uses downloaded copies, because the server's files are not local; quitting never asks about server tasks, which keep running.
 - Account sign-in is not connected; the Sign in button is disabled. Windows material rendering still requires platform QA.
 
 - Release signing, notarization, update hosting, and previous-version installed-artifact qualification require the production release environment.

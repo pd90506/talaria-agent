@@ -12,7 +12,6 @@ import {
   parseConnectionTarget,
   parseDesktopConnection,
   readDesktopConnection,
-  remoteFailurePageUrl,
   writeDesktopConnection,
 } from '../src/remote-connection.ts'
 
@@ -84,8 +83,6 @@ describe('connection pages', () => {
     expect(parseConnectionIntent('dsh-connect://connect?url=nope')).toEqual({ kind: 'connect', url: undefined })
     expect(parseConnectionIntent('dsh-connect://connect')).toEqual({ kind: 'connect', url: undefined })
     expect(parseConnectionIntent('dsh-connect://local')).toEqual({ kind: 'local' })
-    expect(parseConnectionIntent('dsh-connect://edit')).toEqual({ kind: 'edit' })
-    expect(parseConnectionIntent('dsh-connect://retry')).toEqual({ kind: 'retry' })
     expect(parseConnectionIntent('dsh-connect://cancel')).toEqual({ kind: 'cancel' })
     expect(parseConnectionIntent('dsh-connect://other')).toBeUndefined()
     expect(parseConnectionIntent('https://box.ts.net/')).toBeUndefined()
@@ -100,13 +97,6 @@ describe('connection pages', () => {
     expect(page).toContain('href="dsh-connect://local"')
     expect(page).toContain('href="dsh-connect://cancel"')
     expect(pageText(connectionPageUrl(en, { mode: 'local' }))).toContain('value=""')
-  })
-
-  it('names the unreachable server and offers retry, edit, and local choices', () => {
-    const page = pageText(remoteFailurePageUrl(en, 'https://box.ts.net/', 'ERR_NAME_NOT_RESOLVED (-105)'))
-    expect(page).toContain('https://box.ts.net/')
-    expect(page).toContain('ERR_NAME_NOT_RESOLVED (-105)')
-    for (const intent of ['retry', 'edit', 'local']) expect(page).toContain(`href="dsh-connect://${intent}"`)
   })
 })
 

@@ -28,7 +28,8 @@ import {
 } from 'electron'
 import { resolveDesktopPaths } from './paths.ts'
 import { readDesktopConnection } from './remote-connection.ts'
-import { handleConnectionIpc, runRemoteDesktop, showConnectionWindow } from './remote-window.ts'
+import { DesktopRemoteHost } from './remote-host.ts'
+import { handleConnectionIpc, showConnectionWindow } from './remote-window.ts'
 import { DesktopProjectManager } from './project-manager.ts'
 import { DesktopHostFatalError, DesktopHostProcess, DesktopHostUncleanExitError } from './host-process.ts'
 import { DesktopPlatformView, PLATFORM_IPC, platformBounds } from './platform-view.ts'
@@ -382,17 +383,6 @@ function createWindow(preload: string, show = false, primary = false): BrowserWi
 
 async function main(): Promise<void> {
   const connection = await readDesktopConnection(app.getPath('userData'), process.env)
-  if (connection.mode === 'remote') {
-    focusPrimaryWindow = () => {
-      const window = BrowserWindow.getAllWindows().find(candidate => !candidate.isDestroyed() && candidate.getParentWindow() === null)
-      if (window === undefined) return
-      if (window.isMinimized()) window.restore()
-      window.show()
-      window.focus()
-    }
-    runRemoteDesktop({ messages: () => currentDesktopLocale().messages, url: connection.url, userData: app.getPath('userData') })
-    return
-  }
   const desktopSettings = await readDesktopSettings(app.getPath('userData'))
   void pruneCrashReports(app.getPath('logs'))
   const journalDirectory = process.env.DSH_DESKTOP_UPDATE_JOURNAL_DIR
@@ -546,7 +536,7 @@ async function main(): Promise<void> {
     owner => isMandatory() || updateOverlays.input(owner).blocked)
   const backend = new DesktopBackendController((onFailure) => {
     const hostInspectPort = developmentHostInspectPort(development)
-    const host = new DesktopHostProcess(resources.node, resources.dsh, activeProject,
+    const host = connection.mode === 'remote' ? new DesktopRemoteHost(connection.url, (input, init) => fetch(input, init)) : new DesktopHostProcess(resources.node, resources.dsh, activeProject,
       hostInspectPort, { ...hostEnvironment, DSH_CLIENT_VERSION: desktopClientVersion() }, onFailure,
       primaryRuntime,
       resources, (next) => { platformView.setSession(next) }, (record) => {
@@ -604,7 +594,13 @@ async function main(): Promise<void> {
       resolveDragResource: (address: string, signal?: AbortSignal) => host.resolveDragResource(address, signal),
     }
   }, (state) => {
-    if (state.phase === 'error') reportFatal(state.failure, 'host')
+    if (state.phase === 'error' && connection.mode === 'remote') {
+      // An unreachable server is a connection choice to revisit, not a crashed local Host.
+      console.error(state.failure)
+      showConnectionWindow({ messages: () => currentDesktopLocale().messages, current: connection,
+        userData: app.getPath('userData'), parent: mainWindow,
+        error: currentDesktopLocale().messages.remoteUnreachable.replace('{url}', connection.url) })
+    } else if (state.phase === 'error') reportFatal(state.failure, 'host')
     else if (!shuttingDown) backendReady = state.phase === 'ready'
   })
 
@@ -676,7 +672,8 @@ async function main(): Promise<void> {
     startup ??= (async () => {
       await navigateMain(applicationUrl)
       await backend.start(async () => {
-        await Promise.all([manager.applyRelease(), prepareHostEnvironment()])
+        // A remote server owns its runtime and profile; only the bundled Host needs local preparation.
+        if (connection.mode === 'local') await Promise.all([manager.applyRelease(), prepareHostEnvironment()])
       })
       if (backend.host !== undefined) await openInitialWindow()
       if (backend.host !== undefined) updateJournal?.action('workspace-ready')
@@ -838,7 +835,8 @@ async function main(): Promise<void> {
     return browserGuests.release(event.sender, lease)
   })
 
-  session.defaultSession.webRequest.onBeforeSendHeaders({ urls: ['ws://127.0.0.1/*', 'wss://127.0.0.1/*'] }, (details, callback) => {
+  session.defaultSession.webRequest.onBeforeSendHeaders({ urls: ['ws://127.0.0.1/*', 'wss://127.0.0.1/*',
+    ...connection.mode === 'remote' ? [`${new URL(connection.url).protocol === 'https:' ? 'wss' : 'ws'}://${new URL(connection.url).hostname}/*`] : []] }, (details, callback) => {
     if (hostUrl === undefined || hostCookie === undefined || details.webContentsId !== mainWindow?.webContents.id) {
       callback({})
       return
@@ -1197,7 +1195,7 @@ async function main(): Promise<void> {
       { role: 'unhide', label: currentDesktopLocale().messages.showAllApplications }, { type: 'separator' }]
     : []
   const showServerConnection = (): void => {
-    showConnectionWindow({ messages: () => currentDesktopLocale().messages, current: { mode: 'local' },
+    showConnectionWindow({ messages: () => currentDesktopLocale().messages, current: connection,
       userData: app.getPath('userData'), parent: mainWindow })
   }
   const applicationItems = (): MenuItemConstructorOptions[] => [

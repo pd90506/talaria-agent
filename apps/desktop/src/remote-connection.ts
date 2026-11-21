@@ -104,8 +104,6 @@ export async function writeDesktopConnection(userData: string, connection: Deskt
 export type ConnectionIntent =
   | { readonly kind: 'connect'; readonly url: string | undefined }
   | { readonly kind: 'local' }
-  | { readonly kind: 'edit' }
-  | { readonly kind: 'retry' }
   | { readonly kind: 'cancel' }
 
 /**
@@ -125,8 +123,6 @@ export function parseConnectionIntent(href: string): ConnectionIntent | undefine
   switch (url.hostname) {
     case 'connect': return { kind: 'connect', url: normalizeServerUrl(url.searchParams.get('url') ?? '') }
     case 'local': return { kind: 'local' }
-    case 'edit': return { kind: 'edit' }
-    case 'retry': return { kind: 'retry' }
     case 'cancel': return { kind: 'cancel' }
     default: return undefined
   }
@@ -173,29 +169,6 @@ ${error === undefined ? '' : `<p class="error">${escapeHtml(error)}</p>`}
 <a class="button" href="dsh-connect://cancel">${escapeHtml(messages.connectionCancel)}</a>
 <button class="primary" type="submit">${escapeHtml(messages.connectionConnect)}</button>
 </div></form></body></html>`
-  return `data:text/html;charset=utf-8,${encodeURIComponent(html)}`
-}
-
-/**
- * Build the page shown when the remote server cannot be loaded.
- * @param messages - localized shell copy.
- * @param url - the server address.
- * @param detail - the load failure description.
- * @returns a `data:` URL holding the page.
- */
-export function remoteFailurePageUrl(messages: DesktopMessages, url: string, detail: string): string {
-  const html = `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(messages.connectionTitle)}</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
-<style>${PAGE_STYLE}</style></head><body>
-<h1>${escapeHtml(messages.remoteUnreachableTitle)}</h1>
-<p>${escapeHtml(messages.remoteUnreachable.replace('{url}', url))}</p>
-<p><code>${escapeHtml(detail)}</code></p>
-<div class="row">
-<a class="button" href="dsh-connect://local">${escapeHtml(messages.connectionUseLocal)}</a>
-<span class="spacer"></span>
-<a class="button" href="dsh-connect://edit">${escapeHtml(messages.connectServerMenu)}</a>
-<a class="button primary" href="dsh-connect://retry">${escapeHtml(messages.remoteRetry)}</a>
-</div></body></html>`
   return `data:text/html;charset=utf-8,${encodeURIComponent(html)}`
 }
 

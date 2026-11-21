@@ -114,9 +114,6 @@ export interface DshDesktopProductApi {
   }
 }
 
-/** Renderer argument prefix that tells the remote preload which server origin may receive the connection bridge. */
-export const REMOTE_ORIGIN_ARGUMENT = '--dsh-remote-origin='
-
 /** Scheme of Desktop-owned application documents. */
 export const SCHEME = 'dsh-app'
 
