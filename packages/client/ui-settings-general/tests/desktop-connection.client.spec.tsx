@@ -34,12 +34,12 @@ it('shows the local target and connects to a remote address', async () => {
   const { connection, set } = bridge({ mode: 'local' })
   render(<DesktopConnectionRow {...kit} t={t} connection={connection} />)
   await screen.findByText('Current: running on this computer')
-  expect(screen.getByRole('button', { name: 'Run on this computer' }).disabled).toBe(true)
+  expect(screen.getByRole('button', { name: 'Run on this computer' })).toHaveProperty('disabled', true)
   fireEvent.change(screen.getByRole('textbox', { name: 'Server address' }), { target: { value: 'https://box.ts.net' } })
   fireEvent.click(screen.getByRole('button', { name: 'Connect' }))
   await screen.findByText('Restarting to apply the new connection…')
   expect(set).toHaveBeenCalledExactlyOnceWith({ mode: 'remote', url: 'https://box.ts.net' })
-  expect(screen.getByRole('button', { name: 'Connect' }).disabled).toBe(true)
+  expect(screen.getByRole('button', { name: 'Connect' })).toHaveProperty('disabled', true)
 })
 
 it('prefills the remote address and switches back to this computer', async () => {
