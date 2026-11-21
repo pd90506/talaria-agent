@@ -1,23 +1,39 @@
 /** Remote connection mode: one window showing a dsh server's Web application, and the connection chooser. */
-import { app, BrowserWindow, Menu, shell, type MenuItemConstructorOptions } from 'electron'
+import { fileURLToPath } from 'node:url'
+import { app, BrowserWindow, ipcMain, Menu, shell, type IpcMainInvokeEvent, type MenuItemConstructorOptions } from 'electron'
+import type { DesktopConnectionChangeResult, DesktopConnectionTarget } from '@deepseek-ai/dsh-client-ui-settings-general/types'
+import { DESKTOP_IPC, REMOTE_ORIGIN_ARGUMENT } from './ipc.ts'
 import type { DesktopMessages } from './locale.ts'
 import {
   connectionPageUrl,
   parseConnectionIntent,
+  parseConnectionTarget,
   remoteFailurePageUrl,
   writeDesktopConnection,
   type DesktopConnection,
 } from './remote-connection.ts'
 
-/** Window options shared by the remote application and the connection chooser; no preload reaches remote content. */
-function plainWindow(width: number, height: number): BrowserWindow {
+/**
+ * Window options shared by the remote application and the connection chooser.
+ * @param width - initial width.
+ * @param height - initial height.
+ * @param remoteOrigin - server origin that may receive the connection-only preload bridge; omitted for the chooser.
+ * @returns the hidden window.
+ */
+function plainWindow(width: number, height: number, remoteOrigin?: string): BrowserWindow {
   return new BrowserWindow({
     width,
     height,
     minWidth: 420,
     minHeight: 320,
     show: false,
-    webPreferences: { nodeIntegration: false, contextIsolation: true, sandbox: true, webSecurity: true },
+    webPreferences: {
+      nodeIntegration: false, contextIsolation: true, sandbox: true, webSecurity: true,
+      ...remoteOrigin === undefined ? {} : {
+        preload: fileURLToPath(new URL('./preload-remote.cjs', import.meta.url)),
+        additionalArguments: [`${REMOTE_ORIGIN_ARGUMENT}${remoteOrigin}`],
+      },
+    },
   })
 }
 
@@ -28,10 +44,42 @@ function plainWindow(width: number, height: number): BrowserWindow {
  */
 async function switchConnection(userData: string, connection: DesktopConnection): Promise<void> {
   await writeDesktopConnection(userData, connection)
+  restartIntoConnection()
+}
+
+/** Restart Desktop so the next launch reads the stored connection. */
+function restartIntoConnection(): void {
   // The relaunched process inherits this environment; an explicit choice replaces the launch override.
   delete process.env.DSH_DESKTOP_SERVER_URL
   app.relaunch()
   app.quit()
+}
+
+/**
+ * Serve the Settings connection bridge. A saved choice is reported before Desktop restarts into it.
+ * @param options - the connection in use, Electron userData, and the sender check for this mode.
+ * @param options.current - the connection this run uses.
+ * @param options.userData - Electron userData.
+ * @param options.assertSender - rejects IPC from any frame other than the owned application document.
+ */
+export function handleConnectionIpc(options: {
+  current: DesktopConnection
+  userData: string
+  assertSender: (event: IpcMainInvokeEvent) => void
+}): void {
+  ipcMain.handle(DESKTOP_IPC.connectionGet, (event): DesktopConnectionTarget => {
+    options.assertSender(event)
+    return options.current
+  })
+  ipcMain.handle(DESKTOP_IPC.connectionSet, async (event, value: unknown): Promise<DesktopConnectionChangeResult> => {
+    options.assertSender(event)
+    const target = parseConnectionTarget(value)
+    if (target === undefined) return { kind: 'invalid-url' }
+    await writeDesktopConnection(options.userData, target)
+    // Let the reply reach the renderer before the quit closes its window.
+    setTimeout(restartIntoConnection, 200)
+    return { kind: 'saved' }
+  })
 }
 
 /**
@@ -106,8 +154,15 @@ export function runRemoteDesktop(options: {
       console.error(error)
     })
   }
+  handleConnectionIpc({ current, userData: options.userData, assertSender: (event) => {
+    const frame = event.senderFrame
+    if (window === undefined || window.isDestroyed() || event.sender !== window.webContents || frame === null
+      || frame !== window.webContents.mainFrame || new URL(frame.url).origin !== origin) {
+      throw new Error('desktop connection: rejected IPC from an unowned renderer')
+    }
+  } })
   const open = (): BrowserWindow => {
-    const next = plainWindow(1280, 820)
+    const next = plainWindow(1280, 820, origin)
     next.webContents.setWindowOpenHandler(({ url }) => {
       if (['http:', 'https:'].includes(new URL(url).protocol)) void shell.openExternal(url)
       return { action: 'deny' }

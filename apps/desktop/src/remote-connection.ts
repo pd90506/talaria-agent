@@ -198,3 +198,17 @@ export function remoteFailurePageUrl(messages: DesktopMessages, url: string, det
 </div></body></html>`
   return `data:text/html;charset=utf-8,${encodeURIComponent(html)}`
 }
+
+/**
+ * Validate a connection choice received over IPC.
+ * @param value - untrusted renderer input.
+ * @returns the normalized target, or undefined when it is not a local choice or a valid remote address.
+ */
+export function parseConnectionTarget(value: unknown): DesktopConnection | undefined {
+  if (typeof value !== 'object' || value === null) return undefined
+  const record = value as { mode?: unknown; url?: unknown }
+  if (record.mode === 'local') return { mode: 'local' }
+  if (record.mode !== 'remote' || typeof record.url !== 'string') return undefined
+  const url = normalizeServerUrl(record.url)
+  return url === undefined ? undefined : { mode: 'remote', url }
+}

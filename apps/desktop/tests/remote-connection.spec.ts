@@ -9,6 +9,7 @@ import {
   desktopConnectionPath,
   normalizeServerUrl,
   parseConnectionIntent,
+  parseConnectionTarget,
   parseDesktopConnection,
   readDesktopConnection,
   remoteFailurePageUrl,
@@ -106,5 +107,20 @@ describe('connection pages', () => {
     expect(page).toContain('https://box.ts.net/')
     expect(page).toContain('ERR_NAME_NOT_RESOLVED (-105)')
     for (const intent of ['retry', 'edit', 'local']) expect(page).toContain(`href="dsh-connect://${intent}"`)
+  })
+})
+
+describe('parseConnectionTarget', () => {
+  it('accepts a local choice and normalizes a remote address', () => {
+    expect(parseConnectionTarget({ mode: 'local' })).toEqual({ mode: 'local' })
+    expect(parseConnectionTarget({ mode: 'remote', url: 'https://box.ts.net' })).toEqual({ mode: 'remote', url: 'https://box.ts.net/' })
+  })
+
+  it('rejects non-objects, unknown modes, and invalid addresses', () => {
+    expect(parseConnectionTarget(null)).toBeUndefined()
+    expect(parseConnectionTarget('local')).toBeUndefined()
+    expect(parseConnectionTarget({ mode: 'other' })).toBeUndefined()
+    expect(parseConnectionTarget({ mode: 'remote' })).toBeUndefined()
+    expect(parseConnectionTarget({ mode: 'remote', url: 'ftp://box' })).toBeUndefined()
   })
 })

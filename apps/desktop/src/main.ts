@@ -28,7 +28,7 @@ import {
 } from 'electron'
 import { resolveDesktopPaths } from './paths.ts'
 import { readDesktopConnection } from './remote-connection.ts'
-import { runRemoteDesktop, showConnectionWindow } from './remote-window.ts'
+import { handleConnectionIpc, runRemoteDesktop, showConnectionWindow } from './remote-window.ts'
 import { DesktopProjectManager } from './project-manager.ts'
 import { DesktopHostFatalError, DesktopHostProcess, DesktopHostUncleanExitError } from './host-process.ts'
 import { DesktopPlatformView, PLATFORM_IPC, platformBounds } from './platform-view.ts'
@@ -900,6 +900,7 @@ async function main(): Promise<void> {
     windowsLanguage = locale.id
     refreshApplicationMenu()
   })
+  handleConnectionIpc({ current: connection, userData: app.getPath('userData'), assertSender: (event) => { assertProductSender(event) } })
   ipcMain.handle(DESKTOP_IPC.updatesChannelGet, (event) => {
     assertProductSender(event)
     return channelState

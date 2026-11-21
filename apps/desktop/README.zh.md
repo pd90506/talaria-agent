@@ -90,7 +90,7 @@ Windows 在整个运行期间常驻托盘图标。悬停提示为产品名，单
 
 ## 远端服务器
 
-Desktop 可以打开 [dsh server](../../packages/bundle/server-app/README.zh.md)，而不启动内置 Host。从应用菜单（Windows 上为标题栏的应用菜单或托盘菜单）选择 **连接到服务器…**，输入 `dsh server` 打印的地址（例如 `https://box.tailnet.ts.net/`），然后选择 **连接**；Desktop 会把地址保存到 `userData/desktop/connection.json` 并重启。远端模式不启动本地 Host，窗口在没有 preload 桥的情况下加载服务器的 Web 应用。由服务器认证窗口：与服务器 owner 登录同一 Tailnet 的电脑无需启动令牌即可打开。**File** 菜单提供 **连接到服务器…** 以修改地址，以及 **在本机运行** 以回到内置 Host。服务器无法加载时，窗口显示失败信息以及 **重试**、**连接到服务器…** 和 **在本机运行**。`DSH_DESKTOP_SERVER_URL` 只为单次启动选择服务器，不改变已保存的选择；无效值会让启动失败。
+Desktop 可以打开 [dsh server](../../packages/bundle/server-app/README.zh.md)，而不启动内置 Host。在「设置 → 通用」的 **服务器连接** 中，或从应用菜单（Windows 上为标题栏的应用菜单或托盘菜单）选择 **连接到服务器…**，输入 `dsh server` 打印的地址（例如 `https://box.tailnet.ts.net/`），然后选择 **连接**；Desktop 会把地址保存到 `userData/desktop/connection.json` 并重启。远端模式不启动本地 Host，窗口在没有 preload 桥的情况下加载服务器的 Web 应用。由服务器认证窗口：与服务器 owner 登录同一 Tailnet 的电脑无需启动令牌即可打开。**File** 菜单提供 **连接到服务器…** 以修改地址，以及 **在本机运行** 以回到内置 Host。服务器无法加载时，窗口显示失败信息以及 **重试**、**连接到服务器…** 和 **在本机运行**。`DSH_DESKTOP_SERVER_URL` 只为单次启动选择服务器，不改变已保存的选择；无效值会让启动失败。
 
 <a id="key-technical-decisions"></a>
 

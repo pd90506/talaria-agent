@@ -63,6 +63,8 @@ Access: the settings shell and the `settings.open` shortcut are registered only 
 
 -----
 
+Desktop also contributes a **Server connection** row to General when the preload exposes the connection API, both in the bundled workspace and in a remote server's page opened by Desktop. It shows whether Desktop runs the agent on this computer or which server it opens, accepts an http or https server address, and offers **Run on this computer**; saving restarts Desktop into the choice, and an invalid address or IPC failure is reported in the row. Ordinary browsers omit this row.
+
 Desktop also contributes an **Update channel** row to General when the preload exposes the channel API. Selecting the current healthy channel leaves downloads and prepared updates intact without a save or notification. Selecting another channel calls Electron directly and temporarily displays that choice with a spinner. The reply settles the selection against actual shell state; failure rolls it back. A shell-owned toast reports success or a short save failure, including after Settings closes. Startup settings errors use a ten-second toast with a details action; dismissing it does not clear the error. Persistent updater suspensions remain in the update indicator; a failed save does not create one. Ordinary browsers omit this row. File ownership and restart rules are documented in [local desktop settings](../../../apps/desktop/README.md#local-desktop-settings).
 
 <a id="understand-the-implementation"></a>

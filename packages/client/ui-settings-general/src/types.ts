@@ -72,3 +72,24 @@ export interface DesktopChannelBridge {
    */
   subscribe(listener: (state: DesktopChannelState) => void): () => void
 }
+
+/** Where Desktop runs the agent: its bundled local Host, or a remote dsh server. */
+export type DesktopConnectionTarget =
+  | { readonly mode: 'local' }
+  | { readonly mode: 'remote'; readonly url: string }
+
+/** Outcome of a connection change; after `saved`, Desktop restarts into the new target. */
+export type DesktopConnectionChangeResult =
+  | { readonly kind: 'saved' }
+  | { readonly kind: 'invalid-url' }
+
+/** Desktop connection choice, persisted by the Electron shell outside Host settings. */
+export interface DesktopConnectionBridge {
+  /** @returns The connection this Desktop run uses. */
+  get(): Promise<DesktopConnectionTarget>
+  /**
+   * @param target - Explicit user choice; a remote address must be an http or https URL.
+   * @returns `saved` before Desktop restarts into the target, or `invalid-url` without any change.
+   */
+  set(target: DesktopConnectionTarget): Promise<DesktopConnectionChangeResult>
+}
