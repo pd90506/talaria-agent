@@ -74,6 +74,7 @@ const SENTENCE_MODEL_EXPERIENCE: Readonly<Record<string, SentenceContract>> = {
   'packages/host/product-telemetry-otel': { kind: 'none', reason: 'The plugin exports explicit analytics records without contributing model context.' },
   'packages/host/authentication-token': { kind: 'none', reason: 'Launch-token exchange and Cookie verification authenticate HTTP callers without contributing model input.' },
   'packages/host/authentication-desktop': { kind: 'none', reason: 'Private Desktop credential verification authenticates HTTP callers without contributing model input.' },
+  'packages/host/authentication-tailscale': { kind: 'none', reason: 'Tailscale identity-header verification authenticates HTTP callers without contributing model input.' },
   'packages/api/terminal-controller': { kind: 'indirect', reason: 'Working-directory recovery owns directory context; user terminal screens never enter model requests.' },
   'packages/client/ui-sidebar-terminal': { kind: 'none', reason: 'The browser renders user terminal screens without exposing them to the model.' },
   'packages/ssh/ssh-helper-runtime': { kind: 'none', reason: 'The private executable carrier registers no model-facing content; its providers and consumers own operation results.' },

@@ -1,0 +1,16 @@
+# Bilingual-pair consistency record for guide.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write docs/upgrade-guide/v0.2.2-rc.5/talaria-agent-home/guide.md
+/:
+  en: 0e0d73a5d16ceaf3
+  zh: 06e535f8b813ccd2
+/default-harness-home-moves-to-talaria-agent:
+  en: 406e62f00f1b930b
+  zh: a190e6e863bbe12a
+/default-harness-home-moves-to-talaria-agent/change:
+  en: 10227d109cc5e444
+  zh: ddc320b6324aafaf
+/default-harness-home-moves-to-talaria-agent/migration:
+  en: e3a918f14668a38c
+  zh: f70486e31c791f3a

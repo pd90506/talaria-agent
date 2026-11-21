@@ -1,0 +1,43 @@
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write packages/bundle/server-app/README.md
+/:
+  en: 3b3aeb3669637e4f
+  zh: 3e428ee064e0714b
+/deepseek-ai-dsh-server-app:
+  en: 146bd9adf1d54796
+  zh: e7d51cf7f0455b96
+/deepseek-ai-dsh-server-app/summary:
+  en: 1ed8b3670a649a43
+  zh: b9ffaea734464d70
+/deepseek-ai-dsh-server-app/table-of-contents:
+  en: 76368b6b1da79c80
+  zh: 870a323f769763c3
+/deepseek-ai-dsh-server-app/use-this-package:
+  en: 40e8f21ec17d3758
+  zh: 700c157f154aa8ac
+/deepseek-ai-dsh-server-app/understand-the-implementation:
+  en: 93eab79eef136fbb
+  zh: 455d8c2b1d73bab8
+/deepseek-ai-dsh-server-app/model-experience:
+  en: 215e7ba838619b7b
+  zh: a311da3843709f90
+/deepseek-ai-dsh-server-app/model-experience/advertised-tailnet-url:
+  en: e2108173bb4b8389
+  zh: 011f40d61ac35cf2
+/deepseek-ai-dsh-server-app/model-experience/advertised-tailnet-url/what-the-model-sees:
+  en: 0a528ec4c237b43c
+  zh: b1d1511ffb3f5a16
+/deepseek-ai-dsh-server-app/model-experience/advertised-tailnet-url/token-effect:
+  en: 2deb1eaafa54d5cb
+  zh: f75bf3b6cf337783
+/deepseek-ai-dsh-server-app/model-experience/advertised-tailnet-url/kv-cache-effect:
+  en: 1cdbc0caa2e0a56c
+  zh: fed86d15f7067115
+/deepseek-ai-dsh-server-app/known-limitations-and-deferred-work:
+  en: 0a58b6b0e3f1bba5
+  zh: 3ea646f7f2d4e9a7
+/deepseek-ai-dsh-server-app/known-limitations-and-deferred-work/dev-note:
+  en: e67f633dc6fe7773
+  zh: e88aeb617ffb74ea

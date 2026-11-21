@@ -408,7 +408,7 @@ export interface SearchLimits {
 ```ts config-catalog
 /** Local attachment backend configuration. */
 export interface Config {
-  /** Explicit harness home; omitted follows `DSH_HOME`, then `~/.dsh`. */
+  /** Explicit harness home; omitted follows `DSH_HOME`, then `~/.talaria-agent`. */
   dshHome?: string
   /** Maximum encoded bytes accepted for one submitted image. Default: 50 MiB. */
   maxImageBytes?: number
@@ -925,7 +925,7 @@ export interface Config {
 export interface Config {
   /** Credentials document path; defaults to `.credentials.yaml` under the harness home. */
   path?: string
-  /** Harness home used when `path` is omitted; defaults to `$DSH_HOME` or `~/.dsh`. */
+  /** Harness home used when `path` is omitted; defaults to `$DSH_HOME` or `~/.talaria-agent`. */
   dshHome?: string
   /** Watch the document and hot-publish external edits; defaults to true. */
   watch?: boolean
@@ -1914,6 +1914,23 @@ export interface Config {
 }
 ```
 <!-- END GENERATED config-catalog:@deepseek-ai/dsh-host-authentication-desktop -->
+
+<!-- BEGIN GENERATED config-catalog:@deepseek-ai/dsh-host-authentication-tailscale -->
+<a id="deepseek-aidsh-host-authentication-tailscale"></a>
+
+## `@deepseek-ai/dsh-host-authentication-tailscale`
+
+- `inject`: `connection` · `connection.authentication`
+- `source`: [`packages/host/authentication-tailscale/src/index.ts:15`](../packages/host/authentication-tailscale/src/index.ts)
+
+```ts config-catalog
+/** Tailnet users admitted as the owner. */
+export interface Config {
+  /** Tailscale login names, such as `alice@github`, admitted with owner access; at least one. */
+  allowedLogins: string[]
+}
+```
+<!-- END GENERATED config-catalog:@deepseek-ai/dsh-host-authentication-tailscale -->
 
 <!-- BEGIN GENERATED config-catalog:@deepseek-ai/dsh-host-authentication-token -->
 <a id="deepseek-aidsh-host-authentication-token"></a>
@@ -3349,6 +3366,26 @@ export interface JsonRpcConfig {
 ```
 <!-- END GENERATED config-catalog:@deepseek-ai/dsh-sdk-jsonrpc-server -->
 
+<!-- BEGIN GENERATED config-catalog:@deepseek-ai/dsh-server-app -->
+<a id="deepseek-aidsh-server-app"></a>
+
+## `@deepseek-ai/dsh-server-app`
+
+- `source`: [`packages/bundle/server-app/src/index.ts:22`](../packages/bundle/server-app/src/index.ts)
+
+```ts config-catalog
+/** How this plugin reaches the local Tailscale node. */
+export interface Config {
+  /** Tailscale CLI executable name or path. */
+  command: string
+  /** Deadline for each CLI query, in milliseconds. */
+  timeoutMs: number
+  /** Loopback listener port that `tailscale serve` should proxy to. */
+  listenPort: number
+}
+```
+<!-- END GENERATED config-catalog:@deepseek-ai/dsh-server-app -->
+
 <!-- BEGIN GENERATED config-catalog:@deepseek-ai/dsh-session-log-deepseek -->
 <a id="deepseek-aidsh-session-log-deepseek"></a>
 
@@ -3661,7 +3698,7 @@ export interface Config extends SessionTitleLlmConfig {
 ```ts config-catalog
 /** Plugin config (all optional — the built-in facts resolve without defaults). */
 export interface Config {
-  /** DeepSeek Harness home directory exposed as `DSH_HOME`; defaults to `$DSH_HOME` or `~/.dsh`. */
+  /** DeepSeek Harness home directory exposed as `DSH_HOME`; defaults to `$DSH_HOME` or `~/.talaria-agent`. */
   dshHome?: string
 }
 ```
@@ -3698,7 +3735,7 @@ export interface Config {
   providerName?: string
   /** Whether project and user roots are included around custom roots. */
   includeDefaultRoots?: boolean
-  /** DeepSeek Harness config root. Defaults to `$DSH_HOME` or `~/.dsh`. */
+  /** DeepSeek Harness config root. Defaults to `$DSH_HOME` or `~/.talaria-agent`. */
   dshHome?: string
   /** Shared agent config root. Defaults to `$DSH_AGENTS_HOME` or `~/.agents`. */
   agentsHome?: string

@@ -2,6 +2,17 @@
 
 /** Simplified Chinese dictionary (the key-set source of truth). */
 export const zh = {
+  'desktop.connection.title': '服务器连接',
+  'desktop.connection.description': '选择在本机运行 agent，或连接到一台 dsh server。保存后应用会重启。',
+  'desktop.connection.currentLocal': '当前：在本机运行',
+  'desktop.connection.currentRemote': '当前：已连接 {url}',
+  'desktop.connection.placeholder': 'https://server.tailnet.ts.net/',
+  'desktop.connection.address': '服务器地址',
+  'desktop.connection.connect': '连接',
+  'desktop.connection.useLocal': '在本机运行',
+  'desktop.connection.invalid': '请输入 http 或 https 地址。',
+  'desktop.connection.failed': '无法读取或保存连接设置。',
+  'desktop.connection.restarting': '正在重启以应用新的连接…',
   'desktop.channel.title': '更新渠道',
   'desktop.channel.description': '正式版适合日常使用；开发版可提前体验新功能，但可能不稳定。',
   'desktop.channel.stable': '正式版',
@@ -74,6 +85,17 @@ export type SettingsKey = keyof typeof zh
 
 /** English dictionary, checked complete against the zh key set. */
 export const en = {
+  'desktop.connection.title': 'Server connection',
+  'desktop.connection.description': 'Run the agent on this computer or connect to a dsh server. The app restarts after you save.',
+  'desktop.connection.currentLocal': 'Current: running on this computer',
+  'desktop.connection.currentRemote': 'Current: connected to {url}',
+  'desktop.connection.placeholder': 'https://server.tailnet.ts.net/',
+  'desktop.connection.address': 'Server address',
+  'desktop.connection.connect': 'Connect',
+  'desktop.connection.useLocal': 'Run on this computer',
+  'desktop.connection.invalid': 'Enter an http or https address.',
+  'desktop.connection.failed': 'The connection setting could not be read or saved.',
+  'desktop.connection.restarting': 'Restarting to apply the new connection…',
   'desktop.channel.title': 'Update channel',
   'desktop.channel.description': 'Stable is suitable for everyday use. Development offers early access to new features but may be unstable.',
   'desktop.channel.stable': 'Stable',
@@ -143,6 +165,17 @@ export const en = {
 
 /** Japanese copy, checked against the English keys. */
 export const ja = {
+  'desktop.connection.title': 'サーバー接続',
+  'desktop.connection.description': 'このコンピューターでエージェントを実行するか、dsh server に接続します。保存するとアプリが再起動します。',
+  'desktop.connection.currentLocal': '現在：このコンピューターで実行中',
+  'desktop.connection.currentRemote': '現在：{url} に接続中',
+  'desktop.connection.placeholder': 'https://server.tailnet.ts.net/',
+  'desktop.connection.address': 'サーバーアドレス',
+  'desktop.connection.connect': '接続',
+  'desktop.connection.useLocal': 'このコンピューターで実行',
+  'desktop.connection.invalid': 'http または https のアドレスを入力してください。',
+  'desktop.connection.failed': '接続設定を読み込みまたは保存できませんでした。',
+  'desktop.connection.restarting': '新しい接続を適用するために再起動しています…',
   'desktop.channel.title': '更新チャンネル',
   'desktop.channel.description': '安定版は日常的な使用に適しています。開発版では新機能をいち早く試せますが、不安定な場合があります。',
   'desktop.channel.stable': '安定版',
@@ -212,6 +245,17 @@ export const ja = {
 
 /** Spanish dictionary, checked against the English keys. */
 export const es = {
+  'desktop.connection.title': 'Conexión al servidor',
+  'desktop.connection.description': 'Ejecuta el agente en este equipo o conéctate a un dsh server. La aplicación se reinicia al guardar.',
+  'desktop.connection.currentLocal': 'Actual: ejecutándose en este equipo',
+  'desktop.connection.currentRemote': 'Actual: conectado a {url}',
+  'desktop.connection.placeholder': 'https://server.tailnet.ts.net/',
+  'desktop.connection.address': 'Dirección del servidor',
+  'desktop.connection.connect': 'Conectar',
+  'desktop.connection.useLocal': 'Ejecutar en este equipo',
+  'desktop.connection.invalid': 'Introduce una dirección http o https.',
+  'desktop.connection.failed': 'No se pudo leer ni guardar la configuración de conexión.',
+  'desktop.connection.restarting': 'Reiniciando para aplicar la nueva conexión…',
   'desktop.channel.title': 'Canal de actualizaciones',
   'desktop.channel.description': 'Estable es adecuado para el uso diario. Desarrollo permite probar nuevas funciones antes, pero puede ser inestable.',
   'desktop.channel.stable': 'Estable',
@@ -281,6 +325,17 @@ export const es = {
 
 /** French dictionary, checked against the English keys. */
 export const fr = {
+  'desktop.connection.title': 'Connexion au serveur',
+  'desktop.connection.description': 'Exécutez l’agent sur cet ordinateur ou connectez-vous à un dsh server. L’application redémarre après l’enregistrement.',
+  'desktop.connection.currentLocal': 'Actuel : exécution sur cet ordinateur',
+  'desktop.connection.currentRemote': 'Actuel : connecté à {url}',
+  'desktop.connection.placeholder': 'https://server.tailnet.ts.net/',
+  'desktop.connection.address': 'Adresse du serveur',
+  'desktop.connection.connect': 'Se connecter',
+  'desktop.connection.useLocal': 'Exécuter sur cet ordinateur',
+  'desktop.connection.invalid': 'Saisissez une adresse http ou https.',
+  'desktop.connection.failed': 'Impossible de lire ou d’enregistrer le paramètre de connexion.',
+  'desktop.connection.restarting': 'Redémarrage pour appliquer la nouvelle connexion…',
   'desktop.channel.title': 'Canal de mise à jour',
   'desktop.channel.description': 'Stable convient à un usage quotidien. Développement permet de découvrir les nouveautés en avance, mais peut être instable.',
   'desktop.channel.stable': 'Stable',
@@ -350,6 +405,17 @@ export const fr = {
 
 /** German dictionary, checked against the English keys. */
 export const de = {
+  'desktop.connection.title': 'Serververbindung',
+  'desktop.connection.description': 'Führen Sie den Agenten auf diesem Computer aus oder verbinden Sie sich mit einem dsh server. Die App startet nach dem Speichern neu.',
+  'desktop.connection.currentLocal': 'Aktuell: läuft auf diesem Computer',
+  'desktop.connection.currentRemote': 'Aktuell: verbunden mit {url}',
+  'desktop.connection.placeholder': 'https://server.tailnet.ts.net/',
+  'desktop.connection.address': 'Serveradresse',
+  'desktop.connection.connect': 'Verbinden',
+  'desktop.connection.useLocal': 'Auf diesem Computer ausführen',
+  'desktop.connection.invalid': 'Geben Sie eine http- oder https-Adresse ein.',
+  'desktop.connection.failed': 'Die Verbindungseinstellung konnte nicht gelesen oder gespeichert werden.',
+  'desktop.connection.restarting': 'Neustart, um die neue Verbindung anzuwenden…',
   'desktop.channel.title': 'Update-Kanal',
   'desktop.channel.description': 'Stabil eignet sich für den Alltag. Entwicklung bietet frühzeitigen Zugang zu neuen Funktionen, kann aber instabil sein.',
   'desktop.channel.stable': 'Stabil',
@@ -419,6 +485,17 @@ export const de = {
 
 /** Russian dictionary, checked against the English keys. */
 export const ru = {
+  'desktop.connection.title': 'Подключение к серверу',
+  'desktop.connection.description': 'Запускайте агента на этом компьютере или подключитесь к dsh server. После сохранения приложение перезапустится.',
+  'desktop.connection.currentLocal': 'Сейчас: работает на этом компьютере',
+  'desktop.connection.currentRemote': 'Сейчас: подключено к {url}',
+  'desktop.connection.placeholder': 'https://server.tailnet.ts.net/',
+  'desktop.connection.address': 'Адрес сервера',
+  'desktop.connection.connect': 'Подключиться',
+  'desktop.connection.useLocal': 'Запускать на этом компьютере',
+  'desktop.connection.invalid': 'Введите адрес http или https.',
+  'desktop.connection.failed': 'Не удалось прочитать или сохранить настройку подключения.',
+  'desktop.connection.restarting': 'Перезапуск для применения нового подключения…',
   'desktop.channel.title': 'Канал обновлений',
   'desktop.channel.description': 'Стабильный канал подходит для повседневного использования. Канал разработки позволяет раньше попробовать новые функции, но может быть нестабильным.',
   'desktop.channel.stable': 'Стабильный',
@@ -488,6 +565,17 @@ export const ru = {
 
 /** Portuguese dictionary, checked against the English keys. */
 export const pt = {
+  'desktop.connection.title': 'Conexão com o servidor',
+  'desktop.connection.description': 'Execute o agente neste computador ou conecte-se a um dsh server. O aplicativo reinicia depois de salvar.',
+  'desktop.connection.currentLocal': 'Atual: executando neste computador',
+  'desktop.connection.currentRemote': 'Atual: conectado a {url}',
+  'desktop.connection.placeholder': 'https://server.tailnet.ts.net/',
+  'desktop.connection.address': 'Endereço do servidor',
+  'desktop.connection.connect': 'Conectar',
+  'desktop.connection.useLocal': 'Executar neste computador',
+  'desktop.connection.invalid': 'Digite um endereço http ou https.',
+  'desktop.connection.failed': 'Não foi possível ler ou salvar a configuração de conexão.',
+  'desktop.connection.restarting': 'Reiniciando para aplicar a nova conexão…',
   'desktop.channel.title': 'Canal de atualização',
   'desktop.channel.description': 'Estável é adequado para o uso diário. Desenvolvimento oferece acesso antecipado a novos recursos, mas pode ser instável.',
   'desktop.channel.stable': 'Estável',

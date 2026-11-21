@@ -1,6 +1,6 @@
-DeepSeek Harness
-DeepSeek Harness
-Welcome to DeepSeek Harness
+Talaria Agent
+Talaria Agent
+Welcome to Talaria Agent
 Build potential. Explore intelligence.
 Sign in
 Add API Key

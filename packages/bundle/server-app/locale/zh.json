@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Server 运行配置",
+    "description": "运行常驻 Host 与 Web UI，Tailnet 内的设备通过 Tailscale Serve 访问。"
+  }
+}

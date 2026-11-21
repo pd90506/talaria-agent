@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Server プロファイル",
+    "description": "常駐 Host と Web UI を実行し、Tailnet のデバイスから Tailscale Serve 経由でアクセスします。"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Authentification Tailscale",
+    "description": "Connecte les utilisateurs Tailnet identifiés par Tailscale Serve, sans jeton de lancement."
+  }
+}

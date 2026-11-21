@@ -28,7 +28,7 @@ This experimental bundle composes the standalone `cua-mcp` profile, an MCP stdio
 
 ### Start the server
 
-The bundle is a runtime dependency of the `dsh` installation, so a profile that selects it as its only layer loads it from the installation; no pnpm, registry, or network access is involved. Create the profile once under the Harness home (`$DSH_HOME`, by default `~/.dsh`); `dsh --profile cua-mcp` is then the stdio command, and a source checkout runs it through `pnpm dsh` after `pnpm run build`. Do not add the bundle to a profile that already composes `dsh-base`, such as the one `dsh plugin --profile cua-mcp add` creates: both compositions declare the same row ids, which is also why the Web plugin page hides this bundle while the Host inventory still reports it as optional.
+The bundle is a runtime dependency of the `dsh` installation, so a profile that selects it as its only layer loads it from the installation; no pnpm, registry, or network access is involved. Create the profile once under the Harness home (`$DSH_HOME`, by default `~/.talaria-agent`); `dsh --profile cua-mcp` is then the stdio command, and a source checkout runs it through `pnpm dsh` after `pnpm run build`. Do not add the bundle to a profile that already composes `dsh-base`, such as the one `dsh plugin --profile cua-mcp add` creates: both compositions declare the same row ids, which is also why the Web plugin page hides this bundle while the Host inventory still reports it as optional.
 
 ```sh
 mkdir -p "${DSH_HOME:-$HOME/.dsh}/profiles/cua-mcp"
