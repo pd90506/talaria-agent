@@ -220,7 +220,7 @@ const SERVICE_ROLES: ServiceRole[] = [
     pkg: 'client-connection',
     title: 'Connection authentication provider registry',
     mode: 'seam',
-    implementations: ['host-authentication-token', 'host-authentication-desktop'],
+    implementations: ['host-authentication-token', 'host-authentication-desktop', 'host-authentication-tailscale'],
     consumers: ['client-connection'],
     note: 'Tries scope-owned credential verifiers in registration order and returns the first live Peer; transport source policy and business authorization stay with their consumers.',
   },

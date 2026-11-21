@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Tailscale 認証",
+    "description": "Tailscale Serve が識別した Tailnet ユーザーを、起動トークンなしでサインインさせます。"
+  }
+}

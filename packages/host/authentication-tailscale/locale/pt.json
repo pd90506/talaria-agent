@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Autenticação do Tailscale",
+    "description": "Autentica usuários da Tailnet identificados pelo Tailscale Serve, sem token de inicialização."
+  }
+}

@@ -34,7 +34,7 @@ function profileInUse(userData: string): boolean {
 /**
  * Resolve development state outside `.desktop-build`, which `pnpm run clean` removes.
  * A default location that does not exist yet receives the state an earlier launcher left under
- * `.desktop-build/development` unless a running Harness Dev still owns that browser profile;
+ * `.desktop-build/development` unless a running Talaria Agent Dev still owns that browser profile;
  * explicit `DSH_HOME` and `DSH_DESKTOP_USER_DATA_DIR` are used as given.
  * @param appRoot - Desktop application directory.
  * @param environment - Launch environment with optional location overrides.
@@ -49,7 +49,7 @@ export function prepareDevelopmentState(appRoot: string, environment: NodeJS.Pro
     if (!existsSync(path) && existsSync(legacy)) {
       // POSIX renames a directory that a running process still writes, which would split its state.
       if (profileInUse(join(legacyRoot, 'electron-user-data'))) {
-        throw new Error(`desktop development: a running Harness Dev still uses ${legacyRoot}; quit it and retry`)
+        throw new Error(`desktop development: a running Talaria Agent Dev still uses ${legacyRoot}; quit it and retry`)
       }
       try {
         mkdirSync(join(appRoot, '.desktop-dev'), { recursive: true })

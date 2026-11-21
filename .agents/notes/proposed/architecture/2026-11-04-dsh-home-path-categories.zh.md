@@ -6,7 +6,7 @@ Status: proposed
 
 ## 问题
 
-各个包在 `$DSH_HOME`（默认 `~/.dsh`）下自行构造路径，因此 home 根目录混杂着用户配置、持久记录、日志、索引和下载内容。新的服务或插件没有规则可以确定其文件应放在哪里，部分负责方还会手动解析 home：[liveshare](../../../../packages/experimental/liveshare/src/host/share-host.ts) 直接读取 `process.env.DSH_HOME`，[migrate-sessions-to-v4](../../../../scripts/migrate-sessions-to-v4.ts) 默认使用 `~/.dsh/sessions`，不读取 `DSH_HOME`。
+各个包在 `$DSH_HOME`（默认 `~/.talaria-agent`）下自行构造路径，因此 home 根目录混杂着用户配置、持久记录、日志、索引和下载内容。新的服务或插件没有规则可以确定其文件应放在哪里，部分负责方还会手动解析 home：[liveshare](../../../../packages/experimental/liveshare/src/host/share-host.ts) 直接读取 `process.env.DSH_HOME`，[migrate-sessions-to-v4](../../../../scripts/migrate-sessions-to-v4.ts) 默认使用 `~/.talaria-agent/sessions`，不读取 `DSH_HOME`。
 
 ## 方案
 

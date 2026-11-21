@@ -153,6 +153,7 @@ flowchart TD
     pkg_headless["headless"]
     pkg_sdk_app["sdk-app"]
     pkg_sdk_minimal["sdk-minimal"]
+    pkg_server_app["server-app"]
     pkg_web_app["web-app"]
   end
   subgraph group_client["packages/client"]
@@ -355,6 +356,7 @@ flowchart TD
   end
   subgraph group_host["packages/host"]
     pkg_host_authentication_desktop["host-authentication-desktop"]
+    pkg_host_authentication_tailscale["host-authentication-tailscale"]
     pkg_host_authentication_token["host-authentication-token"]
     pkg_host_directory_picker["host-directory-picker"]
     pkg_host_directory_picker_auto["host-directory-picker-auto"]
@@ -516,6 +518,7 @@ flowchart TD
   pkg_attachment --> pkg_error
   pkg_app_boot --> pkg_home_paths
   pkg_app_boot --> pkg_launch_environment
+  pkg_server_app --> pkg_host_webserver
   pkg_client_connection --> pkg_scope
   pkg_credentials --> pkg_launch_environment
   pkg_experimental_computer_use_cua_driver_mcp --> pkg_computer_use
@@ -559,6 +562,7 @@ flowchart TD
   pkg_experimental_webworker_runtime --> pkg_client_modules
   pkg_experimental_webworker_runtime --> pkg_host_webserver
   pkg_host_authentication_desktop --> pkg_client_connection
+  pkg_host_authentication_tailscale --> pkg_client_connection
   pkg_host_authentication_token --> pkg_client_connection
   pkg_host_authentication_token --> pkg_host_webserver
   pkg_host_directory_picker_auto --> pkg_client_connection
@@ -1773,6 +1777,7 @@ flowchart TD
 | [`api-remotes`](../packages/api/remotes) | `api` | [`scope`](../packages/core/scope) |
 | [`attachment`](../packages/attachment/attachment) | `attachment` | [`error`](../packages/util/error) |
 | [`app-boot`](../packages/boot/app-boot) | `boot` | [`home-paths`](../packages/util/home-paths), [`launch-environment`](../packages/util/launch-environment) |
+| [`server-app`](../packages/bundle/server-app) | `bundle` | [`host-webserver`](../packages/host/webserver) |
 | [`client-connection`](../packages/client/connection) | `client` | [`scope`](../packages/core/scope) |
 | [`credentials`](../packages/credentials/credentials) | `credentials` | [`launch-environment`](../packages/util/launch-environment) |
 | [`experimental-computer-use-cua-driver-mcp`](../packages/experimental/computer-use-cua-driver-mcp) | `experimental` | [`computer-use`](../packages/computer-use/computer-use) |
@@ -1798,6 +1803,7 @@ flowchart TD
 | [`cua-mcp`](../packages/experimental/cua-mcp) | `experimental` | [`app-boot`](../packages/boot/app-boot), [`attachment`](../packages/attachment/attachment) |
 | [`experimental-webworker-runtime`](../packages/experimental/webworker-runtime) | `experimental` | [`client-connection`](../packages/client/connection), [`client-modules`](../packages/client/modules), [`host-webserver`](../packages/host/webserver) |
 | [`host-authentication-desktop`](../packages/host/authentication-desktop) | `host` | [`client-connection`](../packages/client/connection) |
+| [`host-authentication-tailscale`](../packages/host/authentication-tailscale) | `host` | [`client-connection`](../packages/client/connection) |
 | [`host-authentication-token`](../packages/host/authentication-token) | `host` | [`client-connection`](../packages/client/connection), [`host-webserver`](../packages/host/webserver) |
 | [`host-directory-picker-auto`](../packages/host/directory-picker-auto) | `host` | [`client-connection`](../packages/client/connection), [`client-ui-directory-picker-browse`](../packages/client/ui-directory-picker-browse), [`client-ui-directory-picker-native`](../packages/client/ui-directory-picker-native), [`host-directory-picker-browse`](../packages/host/directory-picker-browse), [`host-directory-picker-native`](../packages/host/directory-picker-native), [`host-webserver`](../packages/host/webserver) |
 | [`host-frontend-static`](../packages/host/frontend-static) | `host` | [`client-connection`](../packages/client/connection), [`host-webserver`](../packages/host/webserver) |

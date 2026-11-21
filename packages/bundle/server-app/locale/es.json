@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Perfil de servidor",
+    "description": "Ejecuta un Host permanente con la interfaz web, accesible desde los dispositivos de la Tailnet mediante Tailscale Serve."
+  }
+}

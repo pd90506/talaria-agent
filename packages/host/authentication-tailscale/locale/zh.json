@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Tailscale 认证",
+    "description": "无需启动令牌，让 Tailscale Serve 识别出的 Tailnet 用户直接登录。"
+  }
+}

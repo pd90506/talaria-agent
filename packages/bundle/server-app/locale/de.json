@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Server-Profil",
+    "description": "Einen dauerhaft laufenden Host mit Web-UI betreiben, den Tailnet-Geräte über Tailscale Serve erreichen."
+  }
+}

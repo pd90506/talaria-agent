@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Tailscale authentication",
+    "description": "Sign in Tailnet users that Tailscale Serve identifies, without a launch token."
+  }
+}

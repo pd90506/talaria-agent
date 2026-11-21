@@ -2,7 +2,7 @@ import type { DesktopFileActions } from '@deepseek-ai/dsh-client-ui-file-actions
 /** Typed preload operations exposed only by the Electron shell. */
 
 export type { DesktopChannelState, DesktopChannelChangeResult } from '@deepseek-ai/dsh-client-ui-settings-general/types'
-import type { DesktopChannelBridge, DesktopChannelState } from '@deepseek-ai/dsh-client-ui-settings-general/types'
+import type { DesktopChannelBridge, DesktopChannelState, DesktopConnectionBridge } from '@deepseek-ai/dsh-client-ui-settings-general/types'
 import type { DesktopKeyboardApi, DesktopShortcutsApi } from '@deepseek-ai/dsh-client-shortcuts/protocol'
 import type { IpcMainInvokeEvent } from 'electron'
 import type { DesktopBrowserBridge } from '@deepseek-ai/dsh-client-ui-sidebar-browser/types'
@@ -37,6 +37,8 @@ export const DESKTOP_IPC = {
   updatesChannelGet: 'dsh-desktop:updates-channel-get',
   updatesChannelSet: 'dsh-desktop:updates-channel-set',
   updatesChannelChanged: 'dsh-desktop:updates-channel-changed',
+  connectionGet: 'dsh-desktop:connection-get',
+  connectionSet: 'dsh-desktop:connection-set',
   updatesStatus: 'dsh-desktop:updates-status',
   updatesOpen: 'dsh-desktop:updates-open',
   updatesPresentation: 'dsh-desktop:updates-presentation',
@@ -102,6 +104,8 @@ export interface DshDesktopProductApi {
    * @returns `name=value` fields separated by `; `, with no hostname, user name, or serial number.
    */
   deviceInfo(): Promise<string>
+  /** Local or remote server choice shown in Settings. */
+  readonly connection: DesktopConnectionBridge
   readonly updates: {
     readonly channels: DesktopChannelBridge
     status(): Promise<DesktopUpdatePresentation>

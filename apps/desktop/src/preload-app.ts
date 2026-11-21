@@ -1,7 +1,7 @@
 import type { FileSaveResult } from '@deepseek-ai/dsh-client-ui-file-actions/types'
 /** Origin-scoped boot, native directory selection, host paths of picked files, and update presentation with native confirmation actions. */
 
-import type { DesktopChannelState, DesktopChannelChangeResult } from '@deepseek-ai/dsh-client-ui-settings-general/types'
+import type { DesktopChannelState, DesktopChannelChangeResult, DesktopConnectionChangeResult, DesktopConnectionTarget } from '@deepseek-ai/dsh-client-ui-settings-general/types'
 import type { DesktopShortcutInput, ShortcutConfigSnapshot, ShortcutSaveResult } from '@deepseek-ai/dsh-client-shortcuts/protocol'
 import { contextBridge, ipcRenderer, webUtils } from 'electron'
 import { DESKTOP_IPC, SCHEME, type DshDesktopProductApi, type DesktopUpdatePresentation } from './ipc.ts'
@@ -64,6 +64,10 @@ function createProductApi(): DshDesktopProductApi {
         ipcRenderer.on(DESKTOP_IPC.shortcutsChanged, handle)
         return () => { ipcRenderer.off(DESKTOP_IPC.shortcutsChanged, handle) }
       },
+    },
+    connection: {
+      get: () => ipcRenderer.invoke(DESKTOP_IPC.connectionGet) as Promise<DesktopConnectionTarget>,
+      set: target => ipcRenderer.invoke(DESKTOP_IPC.connectionSet, target) as Promise<DesktopConnectionChangeResult>,
     },
     updates: {
       channels: {
